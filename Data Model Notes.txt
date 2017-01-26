@@ -1,0 +1,56 @@
+#Data Model
+
+Store information on a per-ride basis:
+
+db = SyncCycle
+
+___________Collections_
+
+users
+Ride(Date)(Name)#
+	Ex: RideDec0217Sally1
+...
+
+
+Each user : 
+
+{
+	name : 'Sally',
+	rides : [
+	"RideDec0217Sally1",
+	//etc
+	],
+	//other miscellaneous info? Achievements or whatever.
+
+}
+
+{
+	id : "stats",
+	energy : [used, equivalent, savings],
+	physics : [needed, carNeeded],
+	carbon : emissionsPrevented,
+	speed : [average, top],
+	distance : traveled,
+	time : elapsed
+	//etc
+}
+
+for each data point:
+{
+	'sensor' : "speedometer",
+	'time' : 25,
+	'value' : 12.34
+}
+
+{
+	'sensor' : 'sensor2',
+	'time' : 26.4,
+	'value' : 50.543
+}
+
+
+## Python ##
+// find the parent ‘host’ document
+> host = db.users.findOne({name : 'Sally'});  // assumes unique index
+// find the most recent 5000 log message documents linked to that host as an array
+> last_5k_data_pts = db.RideDec0217Sally1.find({"sensor": Sensor.speedometer}).sort({time : -1}).limit(5000)

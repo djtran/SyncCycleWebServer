@@ -1,0 +1,27 @@
+
+
+States:
+
+1. Idle
+
+Not tracking anything, all low power mode, sensors available minimally, but there is no activity going on.
+
+Can transition to Connected or Free Ride modes.
+	Connected -> User connects to the system via phone
+	Free Ride -> Ongoing activity detected through sensors (ex: speedometer ticks 5 times, engine in use, etc.)
+
+2. Connected
+
+Bluetooth connection available between user and system, database ready for ride.
+
+Transitions to Free Ride mode
+	Free Ride -> Disconnected for any reason.
+
+
+3. Free Ride
+
+Database ready for guest ride, will continue to collect data for lifetime statistics of bike.
+
+Can transition to Connected or Idle modes
+	Connected -> User connects to system via phone
+	Idle -> Inactivity persists, time out period exceeded.
