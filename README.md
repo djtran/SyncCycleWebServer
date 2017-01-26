@@ -1,2 +1,10 @@
 # SyncCycleWebServer
-This will be the local method of viewing the data on the device. 
+
+View it on localhost:8080
+
+###Technology involved so far
+
+- Node.js
+  -Express.js
+  -MongoDB Node.js driver
+  -Chart.js
