@@ -20,7 +20,8 @@ class MongoCycle:
 
 	#Get/Create ride by datetime.date and instance (whether it's an int or a string)
 	def getRide(self, date, instance):
-		collection =  date.strftime("%m%d%y")+"Ride"+str(instance);
+		#Example : Jan 1, 1995 => 01011995Ride1
+		collection =  date.strftime("%m%d%Y")+"Ride"+str(instance);
 		return self.db[collection];
 
 	#Returns a cursor that can be used to iterate over all documents(data points) for any given sensor
@@ -37,8 +38,8 @@ class MongoCycle:
 		point = {
 			'sensor' : str(sensorEnum),
 			'time' : time,
-			'value' : valu
-e		}
+			'value' : value
+			}
 
 		if(collection.find_one({'time' : time}) != None):
 			print("Point at time " + str(point["time"]) + " already exists in collection " + collection.name + ". Skipping...")

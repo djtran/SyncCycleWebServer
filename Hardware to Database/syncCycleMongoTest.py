@@ -20,6 +20,7 @@ except pymongo.errors.ServerSelectionTimeoutError:
 try:
 	print("Getting/Creating ride : " + datetime.date.today().strftime("%m%d%y") + "Ride" + str(1));
 	rideCollection = MongoCycle.getRide(datetime.date.today(), 1);
+	# rideCollection = MongoCycle.getRide(datetime.date(1999, 2,2), 1);
 	print("Got ride : " + rideCollection.name);
 except :
  	print("Error with ride getter");
