@@ -18,10 +18,14 @@ except pymongo.errors.ServerSelectionTimeoutError:
 
 #Test making collection
 try:
-	print("Getting/Creating ride : " + datetime.date.today().strftime("%m%d%y") + "Ride" + str(1));
+	print("Getting ride : " + datetime.date.today().strftime("%m%d%Y") + "Ride" + str(1));
 	rideCollection = MongoCycle.getRide(datetime.date.today(), 1);
 	# rideCollection = MongoCycle.getRide(datetime.date(1999, 2,2), 1);
-	print("Got ride : " + rideCollection.name);
+	if(rideCollection != None):
+		print("Got ride : " + rideCollection.name);
+	else:
+		print("Ride not found, creating...");
+		rideCollection = MongoCycle.createRide(datetime.date.today());
 except :
  	print("Error with ride getter");
  	sys.exit();
@@ -47,5 +51,11 @@ except :
 	print("Error with data points");
 	sys.exit();
 
-
-#Test exporting n data points to a json file per Gavin's needs
+try:
+	for n in range(3):
+		print("Creating extra ride " + str(n));
+		ride = MongoCycle.createRide(datetime.date.today());
+		print(str(ride.name) + " was created. ");
+except :
+	print("Error with creating extra rides today");
+	sys.exit();

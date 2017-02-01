@@ -28,13 +28,29 @@ ________Users:______
 ________Ride:__________
 
 {
-	id : "stats",
-	energy : [used, equivalent, savings],
-	physics : [needed, carNeeded],
-	carbon : emissionsPrevented,
-	speed : [average, top],
-	distance : traveled,
-	time : elapsed
+	'id' : "stats",
+	'energy' : {
+		"used" : x, 
+		"equivalent" : y, 
+		"savings" : z
+		},
+	'physics' : {
+		"needed" : x, 
+		"carNeeded" : y
+		},
+	'carbon' : {
+		"emissionsPrevented" : x
+		},
+	'speed' : {
+		"average" : x, 
+		"top" : y
+		},
+	'distance' : {
+		"traveled" : x
+		},
+	'time' : {
+		"elapsed" : x
+		},
 	//etc
 }
 

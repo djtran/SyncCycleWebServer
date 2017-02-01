@@ -18,11 +18,52 @@ class MongoCycle:
 		self.client = pymongo.MongoClient(host,port);
 		self.db = self.client[db];
 
-	#Get/Create ride by datetime.date and instance (whether it's an int or a string)
+	def createRide(self, date):
+		counter = 1;
+		while(True):
+			collection = date.strftime("%m%d%Y")+"Ride"+str(counter);
+			if((collection in self.db.collection_names()) == True):
+				counter += 1;
+			else:
+				create = self.db[collection];
+				stats = {
+					'id' : 'stats',
+					'energy' : {
+						'used' : 0,
+						'equivalent' : 0,
+						'savings' : 0
+						},
+					'physics' : {
+						'needed' : 0,
+						'carNeeded' : 0
+						},
+					'carbon' : {
+						"emissionsPrevented" : 0
+						},
+					'speed' : {
+						"average" : 0, 
+						"top" : 0
+						},
+					'distance' : {
+						"traveled" : 0
+						},
+					'time' : {
+						"elapsed" : 0
+						}
+					}
+				create.insert_one(stats);
+				return create;
+
+
+	#Get ride by datetime.date and instance (whether it's an int or a string)
 	def getRide(self, date, instance):
 		#Example : Jan 1, 1995 => 01011995Ride1
 		collection =  date.strftime("%m%d%Y")+"Ride"+str(instance);
-		return self.db[collection];
+
+		if(collection in self.db.collection_names()):
+			return self.db[collection];
+		else:
+			return None;
 
 	#Returns a cursor that can be used to iterate over all documents(data points) for any given sensor
 	def getAllDataPoints(self, collection, sensorEnum):
@@ -44,10 +85,16 @@ class MongoCycle:
 		if(collection.find_one({'time' : time}) != None):
 			print("Point at time " + str(point["time"]) + " already exists in collection " + collection.name + ". Skipping...")
 			return False;
-		
 
 		result = collection.insert_one(point);
 		return result; #Returns insertOneResult object, will need to handle WriteError / WriteConcernError if they ever come up.
+
+	def getStats(self, collection):
+		return collection.find_one({'id' : 'stats'});
+
+	def updateStats(self, collection, fieldName, fieldValue):
+		result = collection.update_one({'id' : 'stats'}, { fieldName : fieldValue });
+
 
 #Instantiate a MongoCycle object and return it to the user.
 def openMongo():
