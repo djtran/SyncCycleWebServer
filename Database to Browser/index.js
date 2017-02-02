@@ -120,7 +120,15 @@ function getAllRides(callback)
 	db.collections(function(err,items){
 		if(!err)
 		{
-			callback(items);
+			var returnArray = [];
+			for(var i = 0; i < items.length; i++)
+			{
+				if(items[i].collectionName.includes("Ride"))
+				{
+					returnArray.push(items[i].collectionName);
+				}
+			}
+			callback(returnArray);
 		}
 		else
 		{
@@ -233,4 +241,16 @@ MongoClient.connect(mongoURL, function (err,database){
 	}
 
 
+})
+
+
+/******************************
+
+Error Handling.
+
+******************************/
+
+app.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
 })
