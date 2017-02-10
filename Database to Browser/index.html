@@ -14,41 +14,73 @@
   body {
     background-color: #e1e1ff;
   }
+
+  button {
+    margin-left: 30px;
+  }
+
 </style>
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
 <body>
+<div>
+  <button type="button" class="myButton">Click Me!</button>
+</div>
+
+<div class="dump">
+</div>
 
 <div class="container" style="backgroundColor: #EEEEEE">
-  <h2>Quality of Memes by Day of the Week</h2>
+  <h2>DEMO GRAPH</h2>
   <canvas id="myChart"></canvas>
 </div>
 <script>
 
-//<Database Code>?
 
-var http = require('http'),
-    fs = require('fs');
 
-/* Creating server */
-var server = http.createServer(function (request, response) {
-    if (request.url == '/' || request.url == '/index.html') {
-        var fileStream = fs.createReadStream('./index.html');
+var dump = [];
 
-        fileStream.pipe(response);
-    } else {
-        response.writeHead(200, {"Content-Type": "text/plain"});
-        response.end("Hello World\n");
-    }
+var times = [];
+var values = [];
+
+$('.myButton').on("click", function(){
+    //Some code
+    $.getJSON("http://localhost:8080/list/rides", function(result){
+        $.each(result, function(i, field){
+            //dump.push(field);
+            //$(".dump").append(field + " ");
+            var newElement = '<button type="button" class="rideButton" id="'
+            + field + '" > My ride </button>';
+            $(".dump").append(newElement);
+            console.log(newElement);
+        });
+    });
 });
 
-/*Start listening*/
-server.listen(8080);
+$(document).on("click", ".rideButton", function() {
+    times = [];
+    values = [];
+    $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
+        $.each(result, function(i, obj) {
+            dump.push(obj);
+            times.unshift(obj.time);
+            values.push(obj.value);
+        });
+    });
+    console.log(dump);
+    myChart.data.datasets[0].data = values;
+    myChart.data.labels = times;
+    //myChart.reset();
+    myChart.update();
+    myChart.render(500, false);
+});
 
-//</Database Code>
 
+
+//Chart code
 
 var ctx = document.getElementById('myChart').getContext('2d');
 
@@ -64,17 +96,13 @@ Chart.defaults.global.elements.point.borderWidth = 3;
 var myChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: times,
     datasets: [{
-      label: 'DANKNESS',
-      data: [22, 37, 33, 34, 37, 25, 35],
+      label: 'IDK',
+      data: values,
       backgroundColor: fillPattern,
       pointRadius: 5,
       pointHoverRadius: 10
-    }, {
-      label: '???',
-      data: [0,0,0,0,0,0,0],
-      backgroundColor: '#EEEEEE'
     }],
   },
   options: {
