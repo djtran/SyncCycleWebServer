@@ -9,10 +9,11 @@
   h2 {
     font-family: 'Open Sans', sans-serif;
     font-size: 50px;
+    color: #FFFFFF;
   }
 
   body {
-    background-color: #e1e1ff;
+    background-color: #6fb9d6;
   }
 
   button {
@@ -35,7 +36,7 @@
 
 <div class="container" style="backgroundColor: #EEEEEE">
   <h2>DEMO GRAPH</h2>
-  <canvas id="myChart"></canvas>
+
 </div>
 <script>
 
@@ -71,53 +72,60 @@ $(document).on("click", ".rideButton", function() {
         });
     });
     console.log(dump);
-    myChart.data.datasets[0].data = values;
-    myChart.data.labels = times;
+    var myChart = graph(times, values);
+    //myChart.update();
+    //myChart.data.datasets[0].data = values;
+    //myChart.data.labels = times;
     //myChart.reset();
-    myChart.update();
-    myChart.render(500, false);
+    //myChart.update();
+    //myChart.render(500, false);
 });
 
 
 
 //Chart code
 
-var ctx = document.getElementById('myChart').getContext('2d');
+function graph(time, value) {
+    $(".container").append('<canvas id="myChart"></canvas>');
 
-var img = new Image();
-img.src = 'https://i.imgur.com/oowp94M.jpg';
-var fillPattern = ctx.createPattern(img, 'repeat');
-Chart.defaults.global.elements.line.tension = .2;
-Chart.defaults.global.elements.line.borderWidth = 5;
-Chart.defaults.global.elements.line.borderColor = 'rgba(1,1,1,1.0)';
+    //var ctx = document.getElementById('myChart').getContext('2d');
+    var ctx = $("#myChart");
 
-Chart.defaults.global.elements.point.borderColor = 'rgba(0,0,0,1.0)';
-Chart.defaults.global.elements.point.borderWidth = 3;
-var myChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: times,
-    datasets: [{
-      label: 'IDK',
-      data: values,
-      backgroundColor: fillPattern,
-      pointRadius: 5,
-      pointHoverRadius: 10
-    }],
-  },
-  options: {
-    scales: {
-        xAxes: [{
-            display: true
+    // var img = new Image();
+    // img.src = 'https://i.imgur.com/oowp94M.jpg';
+    // var fillPattern = ctx.createPattern(img, 'repeat');
+    // Chart.defaults.global.elements.line.tension = .2;
+    // Chart.defaults.global.elements.line.borderWidth = 2;
+    // Chart.defaults.global.elements.line.borderColor = 'rgba(1,1,1,1.0)';
 
-        }]
-    },
-    title:{
-              display: true,
-              text:"Values"
-          }
-  }
-});
+    // Chart.defaults.global.elements.point.borderColor = 'rgba(0,0,0,1.0)';
+    // Chart.defaults.global.elements.point.borderWidth = 1;
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: time,
+        datasets: [{
+          label: 'Key',
+          data: value,
+          pointRadius: 1,
+          pointHoverRadius: 10
+        }],
+      },
+      options: {
+        scales: {
+            xAxes: [{
+                display: true
 
+            }]
+        },
+        title:{
+                  display: true,
+                  text:"Values"
+              }
+      }
+    });
+
+    return myChart;
+}
 </script>
 </body>
