@@ -6,7 +6,7 @@
     margin: 15px auto;
   }
 
-  h2 {
+  h2, h3 {
     font-family: 'Open Sans', sans-serif;
     font-size: 50px;
     color: #FFFFFF;
@@ -20,32 +20,134 @@
     margin-left: 30px;
   }
 
+  .axis path {
+    fill: none;
+    stroke: #777;
+    shape-rendering: crispEdges;
+  }
+  .axis text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+  }
+
 </style>
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+  <script src="http://d3js.org/d3.v3.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <!-- <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!-- <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet"> -->
 </head>
 <body>
+
+<h3>My Google Maps Demo</h3>
+<div id="map">
+</div>
+
 <div>
   <button type="button" class="myButton">Click Me!</button>
 </div>
 
-<div class="dump">
-</div>
-
 <div class="container" style="backgroundColor: #EEEEEE">
   <h2>DEMO GRAPH</h2>
-
 </div>
+
+<div class="dump">
+  <svg id="chart" width="1000" height="500"></svg>
+</div>
+
+<script>
+  function initMap() {
+    var uluru = {lat: -25.363, lng: 131.044};
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: uluru
+    });
+    var marker = new google.maps.Marker({
+      position: uluru,
+      map: map
+    });
+  }
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1j8aFF51k-9KTAHo4bmbAza7dpZFPEa0&callback=initMap">
+</script>
+
+<script>
+
+  var data = [{
+    "time": "0",
+    "value": "20"
+  }, {
+    "time": "1",
+    "value": "2"
+  }, {
+    "time": "2",
+    "value": "10"
+  }, {
+    "time": "3",
+    "value": "4"
+  }, {
+    "time": "4",
+    "value": "19"
+  }, {
+    "time": "5",
+    "value": "15"
+  }];
+
+  var vis = d3.select("#chart");
+  var WIDTH = 1000;
+  var HEIGHT = 500;
+  var MARGINS = {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 50
+  };
+
+  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,25]);
+  var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,25]);
+
+  var xAxis = d3.svg.axis().scale(xScale);
+  var yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient("left");
+
+  vis.append("svg:g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+    .call(xAxis);
+
+  vis.append("svg:g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + MARGINS.left + ",0)")
+    .call(yAxis);
+
+  var lineGen = d3.svg.line()
+    .x(function(d) {
+      return xScale(d.time);
+    })
+    .y(function(d) {
+      return yScale(d.value);
+    })
+    .interpolate("basis");
+
+  vis.append('svg:path')
+    .attr('d', lineGen(data))
+    .attr('stroke', 'green')
+    .attr('stroke-width', 2)
+    .attr('fill', 'none');
+</script>
+
 <script>
 
 
-
 var dump = [];
-
 var times = [];
 var values = [];
+
+var fullData;
 
 $('.myButton').on("click", function(){
     //Some code
@@ -54,8 +156,8 @@ $('.myButton').on("click", function(){
             //dump.push(field);
             //$(".dump").append(field + " ");
             var newElement = '<button type="button" class="rideButton" id="'
-            + field + '" > My ride </button>';
-            $(".dump").append(newElement);
+            + field + '" > Ride ' + i + ' </button>';
+            $(".container").append(newElement);
             console.log(newElement);
         });
     });
@@ -65,6 +167,7 @@ $(document).on("click", ".rideButton", function() {
     times = [];
     values = [];
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
+        fullData = result;
         $.each(result, function(i, obj) {
             dump.push(obj);
             times.unshift(obj.time);
