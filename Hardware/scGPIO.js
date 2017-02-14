@@ -30,7 +30,7 @@ module.exports = {
 		});
 	},
 	startRide : function(){
-		MongoCycle.createRide(db, Date.now(), 1, function(collection){
+		MongoCycle.createRide(db, new Date(), 1, function(collection){
 			coll = collection;
 			enableSensors();
 		});
