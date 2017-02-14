@@ -6,10 +6,22 @@
     margin: 15px auto;
   }
 
-  h2, h3 {
+  html,body,.container-fluid, .col-md-3,.row {
+    height:100%;
+  }
+
+  .row > div {
+    height:100%;
+  }
+
+  .button-row {
+    background-color: #6fb9d6;
+    height: 100%;
+  }
+
+
+  * {
     font-family: 'Open Sans', sans-serif;
-    font-size: 50px;
-    color: #FFFFFF;
   }
 
   body {
@@ -45,18 +57,30 @@
 <div id="map">
 </div> -->
 
-<div class="container">
-  <div class="button-row">
-    <button type="button" class="myButton">Get Data</button>
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-md-3 no-float">
+      <div class="button-row row">
+        <button type="button" class="myButton">Get Data</button>
+      </div>
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-7">
+      <div class="title row" style="backgroundColor: #EEEEEE">
+      </div>
+      <div class="dump row" style="margin-top: -650px;">
+        <svg id="chart" width="1000" height="500"></svg>
+      </div>
+
+
+    </div>
+    <div class="col-md-1">
+    </div>
   </div>
 
-  <div class="title" style="backgroundColor: #EEEEEE">
-    <h2>DEMO GRAPH</h2>
-  </div>
 
-  <div class="dump">
-    <svg id="chart" width="1000" height="500"></svg>
-  </div>
 </div>
 
 <!-- <script>
@@ -78,29 +102,33 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0CuPxHmmokSyqM3DfvhlNbNs
 
 <script>
 
-  var data = [{
-    "time": "0",
-    "value": "20"
-  }, {
-    "time": "1",
-    "value": "2"
-  }, {
-    "time": "2",
-    "value": "10"
-  }, {
-    "time": "3",
-    "value": "4"
-  }, {
-    "time": "4",
-    "value": "19"
-  }, {
-    "time": "5",
-    "value": "15"
-  }];
+function plotSVG(data) {
+
+  console.log(data);
+
+  // var data = [{
+  //   "time": "0",
+  //   "value": "20"
+  // }, {
+  //   "time": "1",
+  //   "value": "2"
+  // }, {
+  //   "time": "2",
+  //   "value": "10"
+  // }, {
+  //   "time": "3",
+  //   "value": "4"
+  // }, {
+  //   "time": "4",
+  //   "value": "19"
+  // }, {
+  //   "time": "5",
+  //   "value": "15"
+  // }];
 
   var vis = d3.select("#chart");
-  var WIDTH = 1000;
-  var HEIGHT = 500;
+  var WIDTH = 700;
+  var HEIGHT = 350;
   var MARGINS = {
         top: 20,
         right: 20,
@@ -108,7 +136,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0CuPxHmmokSyqM3DfvhlNbNs
         left: 50
   };
 
-  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,25]);
+  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,100]);
   var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,25]);
 
   var xAxis = d3.svg.axis().scale(xScale);
@@ -137,63 +165,69 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0CuPxHmmokSyqM3DfvhlNbNs
 
   vis.append('svg:path')
     .attr('d', lineGen(data))
-    .attr('stroke', 'green')
+    .attr('stroke', 'blue')
     .attr('stroke-width', 2)
     .attr('fill', 'none');
-</script>
 
-<script>
-
+}
 
 var dump = [];
 var times = [];
 var values = [];
 
-var fullData;
+var max = 0;
 
 $('.myButton').on("click", function(){
-    //Some code
+    // GET RIDES
     $.getJSON("http://localhost:8080/list/rides", function(result){
         $.each(result, function(i, field){
-            //dump.push(field);
-            //$(".dump").append(field + " ");
-            var newElement = '<button type="button" class="rideButton" id="'
-            + field + '" > Ride ' + i + ' </button>';
+            var newElement = '<button type="button" class="rideButton col-md-12" id="'
+            + field + '" > Ride ' + (i+1) + ' </button>';
             $(".button-row").append(newElement);
             console.log(newElement);
         });
+
     });
 });
 
 $(document).on("click", ".rideButton", function() {
     times = [];
     values = [];
+
+    var fullData;
+
+    var newTitle = '<h2>SPEEDOMETER DATA FOR RIDE ' + this.id[this.id.length - 1] + ' </h2>';
+    $(".title").append(newTitle);
+
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
         fullData = result;
+        console.log(result);
         $.each(result, function(i, obj) {
             dump.push(obj);
             times.unshift(obj.time);
             values.push(obj.value);
+
         });
+
+        plotSVG(fullData);
+        console.log(max);
     });
-    console.log(dump);
-    var myChart = graph(times, values);
-    //myChart.update();
-    //myChart.data.datasets[0].data = values;
-    //myChart.data.labels = times;
-    //myChart.reset();
-    //myChart.update();
-    //myChart.render(500, false);
+
+    //var myChart = graph(times, values);
+
+
+    //console.log(max);
 });
 
 
 
 //Chart code
 
+
+
 function graph(time, value) {
     $(".title").append('<canvas id="myChart"></canvas>');
 
-    //var ctx = document.getElementById('myChart').getContext('2d');
     var ctx = $("#myChart");
 
     // var img = new Image();
@@ -219,8 +253,18 @@ function graph(time, value) {
       options: {
         scales: {
             xAxes: [{
-                display: true
-
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'TIME (s)'
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'SPEED (mph)'
+                }
             }]
         },
         title:{
