@@ -87,6 +87,9 @@ function enableSensors(){
 				lastTime = thisTime;
 				speed = updateSpeed(speed);
 
+				//milliseconds to seconds
+				time = time/1000;
+
 				console.log("Adding t: " + time + " v: " + speed + " to db");
 				MongoCycle.addDataPoint(coll, MongoCycle.Sensor.speedometer, time, speed);
 			}

@@ -18,7 +18,7 @@ ________Users:______ (only will be made if we can hit stretch goal)
 {
 	name : 'Sally',
 	rides : [
-	"RideDec0217Sally1",
+	"12312017Ride1",
 	//etc
 	],
 	//other miscellaneous info? Achievements or whatever.
@@ -27,32 +27,35 @@ ________Users:______ (only will be made if we can hit stretch goal)
 
 ________Per Ride:________
 
+
 {
-	'id' : "stats",
-	'energy' : {
-		"used" : x, 
-		"equivalent" : y, 
-		"savings" : z
-		},
-	'physics' : {
-		"needed" : x, 
-		"carNeeded" : y
-		},
-	'carbon' : {
-		"emissionsPrevented" : x
-		},
-	'speed' : {
-		"average" : x, 
-		"top" : y
-		},
-	'distance' : {
-		"traveled" : x
-		},
-	'time' : {
-		"elapsed" : x
-		},
-	//etc
+   id:"stats",
+   energy:{
+      used:0,
+      equivalent:0,
+      savings:0,
+
+   },
+   carbon:{
+      emissionsPrevented:0,
+
+   },
+   speed:{
+      average:0,
+      top:0,
+
+   },
+   distance:{
+      traveled:0,
+
+   },
+   time:{
+      elapsed:0,
+
+   }
 }
+//etc
+
 
 for each data point:
 {
