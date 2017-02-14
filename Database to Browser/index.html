@@ -36,28 +36,30 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
   <script src="http://d3js.org/d3.v3.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <!-- <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet"> -->
 </head>
 <body>
 
-<h3>My Google Maps Demo</h3>
+<!-- <h3>My Google Maps Demo</h3>
 <div id="map">
+</div> -->
+
+<div class="container">
+  <div class="button-row">
+    <button type="button" class="myButton">Get Data</button>
+  </div>
+
+  <div class="title" style="backgroundColor: #EEEEEE">
+    <h2>DEMO GRAPH</h2>
+  </div>
+
+  <div class="dump">
+    <svg id="chart" width="1000" height="500"></svg>
+  </div>
 </div>
 
-<div>
-  <button type="button" class="myButton">Click Me!</button>
-</div>
-
-<div class="container" style="backgroundColor: #EEEEEE">
-  <h2>DEMO GRAPH</h2>
-</div>
-
-<div class="dump">
-  <svg id="chart" width="1000" height="500"></svg>
-</div>
-
-<script>
+<!-- <script>
   function initMap() {
     var uluru = {lat: -25.363, lng: 131.044};
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -71,8 +73,8 @@
   }
 </script>
 <script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1j8aFF51k-9KTAHo4bmbAza7dpZFPEa0&callback=initMap">
-</script>
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0CuPxHmmokSyqM3DfvhlNbNsL1kxJkio&callback=initMap">
+</script> -->
 
 <script>
 
@@ -157,7 +159,7 @@ $('.myButton').on("click", function(){
             //$(".dump").append(field + " ");
             var newElement = '<button type="button" class="rideButton" id="'
             + field + '" > Ride ' + i + ' </button>';
-            $(".container").append(newElement);
+            $(".button-row").append(newElement);
             console.log(newElement);
         });
     });
@@ -189,7 +191,7 @@ $(document).on("click", ".rideButton", function() {
 //Chart code
 
 function graph(time, value) {
-    $(".container").append('<canvas id="myChart"></canvas>');
+    $(".title").append('<canvas id="myChart"></canvas>');
 
     //var ctx = document.getElementById('myChart').getContext('2d');
     var ctx = $("#myChart");
