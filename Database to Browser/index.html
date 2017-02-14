@@ -144,9 +144,27 @@ function plotSVG(data) {
     .scale(yScale)
     .orient("left");
 
+  vis.append("text")
+    .attr("transform",
+          "translate(" + (WIDTH/2) + " ," +
+                         (HEIGHT + MARGINS.top + 5) + ")")
+    .style("text-anchor", "middle")
+    .text("TIME (s)");
+
+  // text label for the y axis
+  vis.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 + MARGINS.left)
+      .attr("x", 0 + (HEIGHT / 2))
+      .attr("dy", "-90em")
+      .style("text-anchor", "middle")
+      .text("SPEED (mph)");
+
   vis.append("svg:g")
     .attr("class", "axis")
     .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+    .style("text-anchor", "end")
+    .text("Number of Applicatons")
     .call(xAxis);
 
   vis.append("svg:g")
