@@ -24,7 +24,10 @@ module.exports = {
 		//setupBLE();
 		GPIOManager.init();
 		currentState = State.Idle;
-	}
+
+		//for demoing
+		GPIOManager.startRide();
+	},
 	exit : function()
 	{
 		GPIOManager.exit();

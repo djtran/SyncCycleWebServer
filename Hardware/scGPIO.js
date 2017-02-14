@@ -61,7 +61,7 @@ module.exports = {
 function enableSensors(){
 
 	//Refresh whatever is currently used.
-	Gpio.unwatchAll();
+	speedometer.unwatchAll();
 	// Watch speedometer pin
 	speedometer.watch(function(err, value){
 		if(err)
@@ -96,7 +96,7 @@ function enableSensors(){
 
 function idleSensors()
 {
-	Gpio.unwatchAll();
+	speedometer.unwatchAll();
 	//TO DO, keep one or two specific sensors on but repurpose them to potentially
 	//start a new ride.
 	speedometer.watch(function(err,value){

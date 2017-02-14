@@ -12,7 +12,8 @@ RideManager.init();
 //CTRL C
 process.on('SIGINT', function(){
 	//Safely exit, handover all gpio back to RPi.
-	closeAll().then(process.exit(0));
+	closeAll();
+	process.exit(0);
 })
 
 function closeAll()
