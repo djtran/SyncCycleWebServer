@@ -13,6 +13,7 @@ module.exports = {
 		MongoClient.connect(mongoURL, function(err, database) {
 			if(err)
 			{
+				console.log("Could not connect to the database...");
 				console.log(err);
 				process.exit(1);
 			}
