@@ -33,14 +33,14 @@ MongoCycle.openMongo(function(database){
 				}
 				else
 				{
-					lastTime = Date.now();
+					var thisTime = Date.now();
 					var time = lastTime - beginningMillis;
 
 					//We have a 26x1.75 wheel : Circumference = 2023 mm
 					//speed = distance / time (mm/ms = meters / second)
 					//2.23694 mi/h = 1 m/s
-					var speed = (2023/time)/2.23694;
-
+					var speed = (2023/(thisTime - lastTime))/2.23694;
+					lastTime = thisTime;
 					speed = updateSpeed(speed);
 
 					console.log("Adding t: " + time + " v: " + speed + " to db");
