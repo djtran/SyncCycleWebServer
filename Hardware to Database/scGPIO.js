@@ -1,10 +1,9 @@
 //scGPIO.js
 
-var gpio = require('onoff').Gpio,
+var Gpio = require('onoff').Gpio,
 	MongoCycle = require("./scMongo.js"),
 
-	speedometer = new Gpio(2, 'in'),
-	out = new Gpio(3, 'out');
+	speedometer = new Gpio(2, 'in', 'falling');
 
 var db;
 var beginningMillis;
@@ -14,7 +13,7 @@ MongoCycle.openMongo(function(database){
 
 	MongoCycle.createRide(db, new Date(), 1, function(collection){
 
-		beginningMillis = new Date().now().getTime();
+		beginningMillis = Date.now();
 
 		speedometer.watch(function(err, value){
 			if(err)
@@ -23,7 +22,8 @@ MongoCycle.openMongo(function(database){
 			}
 			else
 			{
-				var time = new Date().now().getTime() - beginningMillis;
+				var time = Date.now() - beginningMillis;
+				console.log("Adding t: " + time + " v: " + value + " to db");
 				MongoCycle.addDataPoint(collection, MongoCycle.Sensor.speedometer, time, value);
 			}
 		})
@@ -33,5 +33,5 @@ MongoCycle.openMongo(function(database){
 
 
 process.on('SIGINT', function () {
-  speedometer.export();
+  speedometer.unexport();
 });
