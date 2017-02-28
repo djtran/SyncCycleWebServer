@@ -1,7 +1,7 @@
 //main.js
 
-var WebManager = require("./Webserver/webserver");
-	RideManager = require("./Hardware/RideManager");
+var WebManager = require("./Webserver/webServer");
+	RideManager = require("./Hardware/rideManager");
 
 
 WebManager.starter();
