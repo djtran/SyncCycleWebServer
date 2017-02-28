@@ -10,16 +10,22 @@
     height:100%;
   }
 
-  h6, h2 {
+  #mid-strip {
+    background-color: #00a3e0;
+  }
+
+
+  h6, h2, h3{
     text-align: center;
   }
 
-  #main-row > div {
+  #main-row > div, #buffer{
     height:100%;
   }
 
   .extra-stats {
-    margin-top: -300px;
+    margin-top: -320px;
+    height: 20%;
   }
 
   .button-row {
@@ -87,7 +93,12 @@
         <button type="button" class="myButton">Refresh Data</button>
       </div>
     </div>
-    <div class="col-md-1"></div>
+    <div class="col-md-1" id="buffer" style="height: 100%;">
+      <div class="row">
+        <div class="col-md-6" id="mid-strip"></div>
+        <div class="col-md-6"></div>
+      </div>
+    </div>
     <div class="col-md-7">
       <div class="title row" style="backgroundColor: #00c1d5">
       </div>
@@ -98,30 +109,30 @@
 
       <div class="row extra-stats">
         <div class="col-md-3">
-          <h2>TOTAL DISTANCE TRAVELLED</h2>
+          <h2><strong>TOTAL DISTANCE TRAVELLED</strong></h2>
         </div>
         <div class="col-md-3">
-          <h2>DURATION OF RIDE</h2>
+          <h2><strong>DURATION OF RIDE</strong></h2>
         </div>
         <div class="col-md-3">
-          <h2>CO2 EMISSIONS AVOIDED</h2>
+          <h2><strong>CO2 EMISSIONS AVOIDED</strong></h2>
         </div>
         <div class="col-md-3">
-          <h2>$ SAVED ON GAS</h2>
+          <h2><strong>$ SAVED ON GAS</strong></h2>
         </div>
       </div>
-      <div class="row extra-stats">
+      <div class="row extra-stats" style="margin-top:-600px">
         <div class="col-md-3">
-          <h2>TOTAL DISTANCE TRAVELLED</h2>
+          <h3>3.4 mi</h3>
         </div>
         <div class="col-md-3">
-          <h2>DURATION OF RIDE</h2>
+          <h3>19:43</h3>
         </div>
         <div class="col-md-3">
-          <h2>CO2 EMISSIONS AVOIDED</h2>
+          <h3>525 g CO2</h3>
         </div>
         <div class="col-md-3">
-          <h2>$ SAVED ON GAS</h2>
+          <h3>$0.36</h3>
         </div>
       </div>
 
@@ -180,7 +191,7 @@ function plotSVG(data) {
           "translate(" + (WIDTH/2) + " ," +
                          (HEIGHT + MARGINS.top + 5) + ")")
     .style("text-anchor", "middle")
-    .text("TIME (s)");
+    .text("TIME (min)");
 
   // text label for the y axis
   vis.append("text")
@@ -245,7 +256,7 @@ $(document).one("click", ".rideButton", function() {
 
     var fullData;
 
-    var newTitle = '<h1>SPEEDOMETER DATA FOR RIDE ' + this.id[this.id.length - 1] + ' </h1>';
+    var newTitle = '<h1>Ride ' + this.id[this.id.length - 1] + ' on 2/23/17 </h1>';
     //$(document).not($(".title").has("h2")).append(newTitle);
 
     //$(".title:not(:has(>h2)").append(newTitle);
