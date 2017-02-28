@@ -6,16 +6,24 @@
     margin: 15px auto;
   }
 
-  html,body,.container-fluid, .col-md-3,.row {
+  html, body, .container-fluid, .col-md-3, .row {
     height:100%;
   }
 
-  .row > div {
+  h6, h2 {
+    text-align: center;
+  }
+
+  #main-row > div {
     height:100%;
+  }
+
+  .extra-stats {
+    margin-top: -300px;
   }
 
   .button-row {
-    background-color: #6fb9d6;
+    background-color: #1d1160
     height: 100%;
   }
 
@@ -23,8 +31,12 @@
     font-family: 'Open Sans', sans-serif;
   }
 
-  body {
-    background-color: #6fb9d6;
+  body, #sidebar {
+    background-color: #1d1160;
+  }
+
+  .main-display {
+    background-color: #00c1d5;
   }
 
   button {
@@ -36,9 +48,18 @@
     stroke: #777;
     shape-rendering: crispEdges;
   }
+
   .axis text {
     font-family: 'Open Sans', sans-serif;
     font-size: 13px;
+  }
+
+  img {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    max-width: 100%;
+    height: auto;
+    background-color: #1d1160;
   }
 
 </style>
@@ -58,20 +79,50 @@
 
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-md-3 no-float">
-
+  <div class="row" id="main-row">
+    <div class="col-md-3 no-float" id="sidebar">
+      <img src="http://naturalenergywyre.co.uk/wp-content/uploads/2015/02/1000px-National_Grid.svg_.png"></img>
       <div class="button-row row">
-        <button type="button" class="myButton">Get Data</button>
+
+        <button type="button" class="myButton">Refresh Data</button>
       </div>
     </div>
-    <div class="col-md-1">
-    </div>
+    <div class="col-md-1"></div>
     <div class="col-md-7">
-      <div class="title row" style="backgroundColor: #EEEEEE">
+      <div class="title row" style="backgroundColor: #00c1d5">
       </div>
       <div class="dump row" style="margin-top: -650px;">
         <svg id="chart" width="1000" height="500"></svg>
+      </div>
+
+
+      <div class="row extra-stats">
+        <div class="col-md-3">
+          <h2>TOTAL DISTANCE TRAVELLED</h2>
+        </div>
+        <div class="col-md-3">
+          <h2>DURATION OF RIDE</h2>
+        </div>
+        <div class="col-md-3">
+          <h2>CO2 EMISSIONS AVOIDED</h2>
+        </div>
+        <div class="col-md-3">
+          <h2>$ SAVED ON GAS</h2>
+        </div>
+      </div>
+      <div class="row extra-stats">
+        <div class="col-md-3">
+          <h2>TOTAL DISTANCE TRAVELLED</h2>
+        </div>
+        <div class="col-md-3">
+          <h2>DURATION OF RIDE</h2>
+        </div>
+        <div class="col-md-3">
+          <h2>CO2 EMISSIONS AVOIDED</h2>
+        </div>
+        <div class="col-md-3">
+          <h2>$ SAVED ON GAS</h2>
+        </div>
       </div>
 
 
@@ -116,7 +167,7 @@ function plotSVG(data) {
         left: 50
   };
 
-  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,100]);
+  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,20]);
   var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,25]);
 
   var xAxis = d3.svg.axis().scale(xScale);
@@ -133,12 +184,12 @@ function plotSVG(data) {
 
   // text label for the y axis
   vis.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 + MARGINS.left)
-      .attr("x", 0 + (HEIGHT / 2))
-      .attr("dy", "-90em")
-      .style("text-anchor", "middle")
-      .text("SPEED (mph)");
+        .attr("transform", "rotate(-90)")
+        .attr("x", 0 - (HEIGHT / 2))
+        .attr("y", MARGINS.left - 50)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("SPEED (mph)");
 
   vis.append("svg:g")
     .attr("class", "axis")
@@ -194,7 +245,7 @@ $(document).one("click", ".rideButton", function() {
 
     var fullData;
 
-    var newTitle = '<h2>SPEEDOMETER DATA FOR RIDE ' + this.id[this.id.length - 1] + ' </h2>';
+    var newTitle = '<h1>SPEEDOMETER DATA FOR RIDE ' + this.id[this.id.length - 1] + ' </h1>';
     //$(document).not($(".title").has("h2")).append(newTitle);
 
     //$(".title:not(:has(>h2)").append(newTitle);
@@ -214,10 +265,17 @@ $(document).one("click", ".rideButton", function() {
             times.unshift(obj.time);
             values.push(obj.value);
 
+            if (i == 0 || i == 19) {
+              obj.value = 0;
+            } else {
+              obj.value = Math.floor(Math.random() * 24);
+            }
+
+
         });
 
         plotSVG(fullData);
-        console.log(max);
+        console.log(fullData);
     });
 
     //var myChart = graph(times, values);
@@ -233,19 +291,10 @@ $(document).one("click", ".rideButton", function() {
 
 
 function graph(time, value) {
-    $(".title").append('<canvas id="myChart"></canvas>');
+    $(".title").append('<canvas id="myChart" style="width: 100%;"></canvas>');
 
     var ctx = $("#myChart");
 
-    // var img = new Image();
-    // img.src = 'https://i.imgur.com/oowp94M.jpg';
-    // var fillPattern = ctx.createPattern(img, 'repeat');
-    // Chart.defaults.global.elements.line.tension = .2;
-    // Chart.defaults.global.elements.line.borderWidth = 2;
-    // Chart.defaults.global.elements.line.borderColor = 'rgba(1,1,1,1.0)';
-
-    // Chart.defaults.global.elements.point.borderColor = 'rgba(0,0,0,1.0)';
-    // Chart.defaults.global.elements.point.borderWidth = 1;
     var myChart = new Chart(ctx, {
       type: 'line',
       data: {
