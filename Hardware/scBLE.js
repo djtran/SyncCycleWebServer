@@ -15,13 +15,19 @@
  
 // Using the bleno module
 var bleno = require('bleno');
+var mongoCycle = require("./scMongo");
+
+var rideManager;
+var GPIOManager;
 
 var name = "SyncCycle";
-var address = "12ab"
+
+var notifyIndex = 0;
  
 // Once bleno starts, begin advertising our BLE address
 bleno.on('stateChange', function(state) {
-    console.log('State change: ' + state);
+    console.log('Bleno state change: ' + state);
+
     if (state === 'poweredOn') {
         bleno.startAdvertising(name,['12ab']);
     } else {
@@ -32,11 +38,13 @@ bleno.on('stateChange', function(state) {
 // Notify the console that we've accepted a connection
 bleno.on('accept', function(clientAddress) {
     console.log("Accepted connection from address: " + clientAddress);
+    rideManager.changeState(rideManager.State.Connected);
 });
  
 // Notify the console that we have disconnected from a client
 bleno.on('disconnect', function(clientAddress) {
     console.log("Disconnected from address: " + clientAddress);
+    rideManager.changeState(rideManager.State.FreeRide);
 });
  
 // When we begin advertising, create a new service and characteristic
@@ -52,18 +60,107 @@ bleno.on('advertisingStart', function(error) {
                 uuid : '12ab',
                 characteristics : [
                     
+                    ////////////
+                    // request - Writable
+                    //
+                    //  Ex: StartRide, GetRide, EndRide 
+                    ////////////
+
+                    new bleno.Characteristic({
+                        uuid : 'aaa0',
+                        properties : ["write"],
+
+                        onWriteRequest : function(data, offset, withoutResponse, callback){
+                            
+                            switch(data.toString().toUpperCase()){
+                                case "STARTRIDE":
+
+                                case "ENDRIDE":
+
+                            }
+
+                            console.log("request" + data.toString("utf-8"));
+
+
+                            callback(this.RESULT_SUCCESS);
+                        }
+                    }),
+
+                    ////////////
+                    // currentRide - Readable to get current ride
+                    ////////////
+
+                    new bleno.Characteristic({
+                        uuid : 'bbb0',
+                        properties : ["read"],
+
+                        onReadRequest : function(offset, callback){
+                            console.log("Read currentRide request");
+                            callback(this.RESULT_SUCCESS, new Buffer(rideManager.getRide())); // if empty, then the app will handle that.
+                        }
+                    }),
+
+                    ////////////
+                    // Location - Writable
+                    //
+                    // Ex: "X-Y-Z" coordinates
+                    ////////////
+                    new bleno.Characteristic({
+                        uuid : 'aaa2',
+                        properties : ["write"],
+
+                        onWriteRequest : function(data, offset, withoutResponse, callback)
+                        {
+                            console.log("Location: " + data.toString("utf-8"));
+
+                            if(GPIOManager.getCurrentRide())
+                            {
+                                GPIOManager.updateLocation(data.toString("utf-8"));
+                            }
+                        }
+                    }),
+
+                    ////////////
+                    // rideDataStream- Subscribable - notify every 1 second
+                    //
+                    // Will be a stream of "'property':'value'" strings
+                    ////////////
+
                     // Define a new characteristic within that service
                     new bleno.Characteristic({
                         value : null,
-                        uuid : '34cd',
-                        properties : ['notify', 'read', 'write'],
+                        uuid : 'ccc0',
+                        properties : ['notify'],
                         
                         // If the client subscribes, we send out a message every 1 second
                         onSubscribe : function(maxValueSize, updateValueCallback) {
                             console.log("Device subscribed");
                             this.intervalId = setInterval(function() {
-                                console.log("Sending: Hi!");
-                                updateValueCallback(new Buffer("Hi!"));
+
+                                if(GPIOManager.getCurrentRide())
+                                {
+                                    mongoCycle.getStats(GPIOManager.getCurrentRide(), function(statDoc){
+                                        switch(notifyIndex)
+                                        {
+                                            case 0:
+                                                console.log("notifying energy used");
+                                                updateValueCallback(new Buffer("energyUsed:" + statDoc.energy.used.toString("utf-8")));
+                                                break;
+
+                                            case 1:
+                                                console.log("notifying energy equivalent");
+                                                updateValueCallback(new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString("utf-8")));
+                                                break;
+
+                                            case 2:
+                                                console.log("notifying energy savings");
+                                                updateValueCallback(new Buffer("energySav:" + statDoc.energy.savings.toString("utf-8")));
+                                                break;
+                                        }
+                                        notifyIndex += 1;
+                                        notifyIndex = notifyIndex % 3;
+                                    });
+                                }
                             }, 1000);
                         },
                         
@@ -72,20 +169,6 @@ bleno.on('advertisingStart', function(error) {
                             console.log("Device unsubscribed");
                             clearInterval(this.intervalId);
                         },
-                        
-                        // Send a message back to the client with the characteristic's value
-                        onReadRequest : function(offset, callback) {
-                            console.log("Read request received");
-                            callback(this.RESULT_SUCCESS, new Buffer("Echo: " + 
-                                    (this.value ? this.value.toString("utf-8") : "")));
-                        },
-                        
-                        // Accept a new value for the characterstic's value
-                        onWriteRequest : function(data, offset, withoutResponse, callback) {
-                            this.value = data;
-                            console.log('Write request: value = ' + this.value.toString("utf-8"));
-                            callback(this.RESULT_SUCCESS);
-                        }
  
                     })
                     
@@ -94,3 +177,11 @@ bleno.on('advertisingStart', function(error) {
         ]);
     }
 });
+
+module.exports = {
+    starter : function(rideMan)
+    {
+        rideManager = rideMan;
+        GPIOManager = rideManager.getGPIOManager();
+    }
+}

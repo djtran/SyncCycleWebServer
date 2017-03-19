@@ -38,6 +38,20 @@ module.exports = {
 		lastTime = beginningMillis;
 		lastSpeeds = [0,0,0,0,0];
 	},
+	getCurrentRide : function(){
+		return coll;
+	},
+	updateLocation : function(locationData){
+		if(!coll)
+		{
+			module.exports.startRide();
+		}
+		var thisTime = Date.now();
+		var time = thisTime - beginningMillis;
+		time = time/1000;
+
+		MongoCycle.addDataPoint(coll, MongoCycle.Sensor.location, time, locationData);
+	}
 	endRide : function(){
 		coll = null;
 		beginningMillis = 0;

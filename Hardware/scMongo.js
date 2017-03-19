@@ -8,6 +8,7 @@ module.exports = {
 	Sensor : {
 		speedometer : "Sensor.speedometer",
 		battery : "Sensor.battery",
+		location : "Sensor.location",
 	},
 	openMongo : function(callback){
 		MongoClient.connect(mongoURL, function(err, database) {
