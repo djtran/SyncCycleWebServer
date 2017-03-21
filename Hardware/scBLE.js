@@ -74,8 +74,9 @@ bleno.on('advertisingStart', function(error) {
                             
                             switch(data.toString().toUpperCase()){
                                 case "STARTRIDE":
-
+					GPIOManager.startRide();
                                 case "ENDRIDE":
+					GPIOManager.endRide();
 
                             }
 
@@ -96,7 +97,16 @@ bleno.on('advertisingStart', function(error) {
 
                         onReadRequest : function(offset, callback){
                             console.log("Read currentRide request");
-                            callback(this.RESULT_SUCCESS, new Buffer(rideManager.getRide())); // if empty, then the app will handle that.
+			    var coll = GPIOManager.getCurrentRide();
+
+			    if(coll)
+			    {
+                                callback(this.RESULT_SUCCESS, new Buffer(coll.collectionName.toString()));
+			    }
+			    else
+			    {
+				callback(this.RESULT_SUCCESS, new Buffer("");
+			    }
                         }
                     }),
 
@@ -144,17 +154,17 @@ bleno.on('advertisingStart', function(error) {
                                         {
                                             case 0:
                                                 console.log("notifying energy used");
-                                                updateValueCallback(new Buffer("energyUsed:" + statDoc.energy.used.toString("utf-8")));
+                                                updateValueCallback(new Buffer("energyUsed:" + statDoc.energy.used.toString()));
                                                 break;
 
                                             case 1:
                                                 console.log("notifying energy equivalent");
-                                                updateValueCallback(new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString("utf-8")));
+                                                updateValueCallback(new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString()));
                                                 break;
 
                                             case 2:
                                                 console.log("notifying energy savings");
-                                                updateValueCallback(new Buffer("energySav:" + statDoc.energy.savings.toString("utf-8")));
+                                                updateValueCallback(new Buffer("energySav:" + statDoc.energy.savings.toString()));
                                                 break;
                                         }
                                         notifyIndex += 1;

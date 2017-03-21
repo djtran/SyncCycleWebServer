@@ -10,7 +10,7 @@ var GPIOManager = require("./scGPIO");
 //freeride
 //connected
 
-var currentState = module.exports.State.Idle;
+var currentState;
 
 module.exports = {
 	State : {

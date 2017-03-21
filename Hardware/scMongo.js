@@ -2,7 +2,7 @@
 
 var MongoClient = require('mongodb').MongoClient;
 
-var mongoURL = 'mongodb://localhost:27017/syncCycle';
+var mongoURL = 'mongodb://127.0.0.1:27017/syncCycle';
 
 module.exports = {
 	Sensor : {

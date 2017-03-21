@@ -51,7 +51,7 @@ module.exports = {
 		time = time/1000;
 
 		MongoCycle.addDataPoint(coll, MongoCycle.Sensor.location, time, locationData);
-	}
+	},
 	endRide : function(){
 		coll = null;
 		beginningMillis = 0;
