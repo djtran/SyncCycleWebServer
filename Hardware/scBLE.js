@@ -2,6 +2,7 @@
 
 // Using the bleno module
 var bleno = require('bleno');
+var mongoCycle = require("./scMongo");  //only used once, but we need it to get stats. or move that function to scGPIO, but thats another time.
 
 var rideManager;
 var GPIOManager;
@@ -132,67 +133,66 @@ bleno.on('advertisingStart', function(error) {
                         onSubscribe : function(maxValueSize, updateValueCallback) {
                             console.log("Device subscribed");
                             this.intervalId = setInterval(function(){
-
+                                clearInterval(this.subIntervalId);
                                 if(GPIOManager.getCurrentRide())
                                 {
-                                    this.GPIOManager.getCurrentRide().getStats(GPIOManager.getCurrentRide(), function(doc){
+                                    mongoCycle.getStats(GPIOManager.getCurrentRide(), function(doc){
                                         statDoc = doc;
+
+                                        this.subIntervalId = setInterval(function(){
+                                            switch(notifyIndex)
+                                            {
+                                                case 0:
+                                                console.log("notifying energy used");
+                                                updateValueCallback(new Buffer("energyUsed:" + statDoc.energy.used.toString()));
+                                                break;
+
+                                                case 1:
+                                                console.log("notifying energy equivalent");
+                                                updateValueCallback(new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString()));
+                                                break;
+
+                                                case 2:
+                                                console.log("notifying energy savings");
+                                                updateValueCallback(new Buffer("energySav:" + statDoc.energy.savings.toString()));
+                                                break;
+
+                                                case 3:
+                                                console.log("notifying carbon emissions");
+                                                updateValueCallback(new Buffer("carbonEm:" + statDoc.carbon.emissionsPrevented.toString()));
+                                                break;
+
+                                                case 4:
+                                                console.log("notifying avg speed");
+                                                updateValueCallback(new Buffer("speedAvg:"+statDoc.speed.average.toString()));
+                                                break;
+
+                                                case 5:
+                                                console.log("notifying top speed");
+                                                updateValueCallback(new Buffer("speedTop:"+ statDoc.speed.top.toString()));
+                                                break;
+
+                                                case 6:
+                                                console.log("notifying distance traveled");
+                                                updateValueCallback(new Buffer("distanceTra:" + statDoc.distance.traveled.toString()));
+                                                break;
+
+                                                case 7:
+                                                console.log("notifying time elapsed");
+                                                updateValueCallback(new Buffer("timeEla:" + statDoc.time.elapsed.toString()));
+                                                break;
+
+                                                default:
+                                                break;
+                                            }
+                                            notifyIndex += 1;
+                                            if(notifyIndex == 8)
+                                            {
+                                                notifyIndex = 0;
+                                                clearInterval(this.subIntervalId);
+                                            }
+                                        }, 250);
                                     });
-
-                                    this.subIntervalId = setInterval(function(){
-                                        switch(notifyIndex)
-                                        {
-                                            case 0:
-                                            console.log("notifying energy used");
-                                            updateValueCallback(new Buffer("energyUsed:" + statDoc.energy.used.toString()));
-                                            break;
-
-                                            case 1:
-                                            console.log("notifying energy equivalent");
-                                            updateValueCallback(new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString()));
-                                            break;
-
-                                            case 2:
-                                            console.log("notifying energy savings");
-                                            updateValueCallback(new Buffer("energySav:" + statDoc.energy.savings.toString()));
-                                            break;
-
-                                            case 3:
-                                            console.log("notifying carbon emissions");
-                                            updateValueCallback(new Buffer("carbonEm:" + statDoc.carbon.emissionsPrevented.toString()));
-                                            break;
-
-                                            case 4:
-                                            console.log("notifying avg speed");
-                                            updateValueCallback(new Buffer("speedAvg:"+statDoc.speed.average.toString()));
-                                            break;
-
-                                            case 5:
-                                            console.log("notifying top speed");
-                                            updateValueCallback(new Buffer("speedTop:"+ statDoc.speed.top.toString()));
-                                            break;
-
-                                            case 6:
-                                            console.log("notifying distance traveled");
-                                            updateValueCallback(new Buffer("distanceTra:" + statDoc.distance.traveled.toString()));
-                                            break;
-
-                                            case 7:
-                                            console.log("notifying time elapsed");
-                                            updateValueCallback(new Buffer("timeEla:" + statDoc.time.elapsed.toString()));
-                                            break;
-
-                                            default:
-                                            break;
-                                        }
-                                        notifyIndex += 1;
-                                        notifyIndex = notifyIndex % 8;
-                                        if(notifyIndex == 8)
-                                        {
-                                            notifyIndex = 0;
-                                            clearInterval(this.subIntervalId);
-                                        }
-                                    }, 250);
                                 }
                             }, 2000);
                         },
