@@ -10,11 +10,11 @@ RideManager.init();
 BLEManager.starter(RideManager);
 
 
-//CTRL C
+//CTRL C;
 process.on('SIGINT', function(){
 	//Safely exit, handover all gpio back to RPi.
 	closeAll();
-	process.exit(0);
+	process.exit(0)
 })
 
 function closeAll()

@@ -13,6 +13,8 @@ var lastSpeeds;
 
 var db;
 
+var statsUpdateInterval;
+
 //////////////////////////////////////////
 //										//
 //										//
@@ -37,6 +39,11 @@ module.exports = {
 		beginningMillis = Date.now();
 		lastTime = beginningMillis;
 		lastSpeeds = [0,0,0,0,0];
+
+		statsUpdateInterval = setInterval(function(){
+			updateStatsDoc(coll);
+		}, 3000);
+
 	},
 	getCurrentRide : function(){
 		return coll;
@@ -58,6 +65,8 @@ module.exports = {
 		lastTime = 0;
 		lastSpeeds = [0,0,0,0,0];
 		idleSensors();
+
+		clearInterval(statsUpdateInterval);
 	},
 	exit : function()
 	{
@@ -71,6 +80,21 @@ module.exports = {
 
 //////////////////////////////////////////	
 //////////////////////////////////////////
+
+//USE THE DATA CALCULATION FUNCTIONS IN HERE.
+function updateStatsDoc(coll){
+	//Energy
+
+	//Carbon
+
+	//Speed
+
+	//Distance
+
+	//Time
+	updateStatsDoc(coll, "time", "elapsed", Date.Now() - beginningMillis);
+
+}
 
 function enableSensors(){
 
