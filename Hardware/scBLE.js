@@ -133,13 +133,12 @@ bleno.on('advertisingStart', function(error) {
                         onSubscribe : function(maxValueSize, updateValueCallback) {
                             console.log("Device subscribed");
                             this.intervalId = setInterval(function(){
-                                clearInterval(this.subIntervalId);
                                 if(GPIOManager.getCurrentRide())
                                 {
                                     mongoCycle.getStats(GPIOManager.getCurrentRide(), function(doc){
                                         statDoc = doc;
 
-                                        this.subIntervalId = setInterval(function(){
+                                        for(notifyIndex = 0; notifyIndex < 8; notifyIndex++){
                                             switch(notifyIndex)
                                             {
                                                 case 0:
@@ -185,16 +184,12 @@ bleno.on('advertisingStart', function(error) {
                                                 default:
                                                 break;
                                             }
-                                            notifyIndex += 1;
-                                            if(notifyIndex == 8)
-                                            {
-                                                notifyIndex = 0;
-                                                clearInterval(this.subIntervalId);
-                                            }
-                                        }, 250);
+                                        }
+
+                                        //End for-loop
                                     });
                                 }
-                            }, 2000);
+                            }, 3000);
                         },
 
                         // If the client unsubscribes, we stop broadcasting the message

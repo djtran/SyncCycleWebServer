@@ -41,7 +41,8 @@ module.exports = {
 		lastSpeeds = [0,0,0,0,0];
 
 		statsUpdateInterval = setInterval(function(){
-			updateStatsDoc(coll);
+			console.log("updating stats");
+			recalculateStats(coll);
 		}, 3000);
 
 	},
@@ -82,7 +83,7 @@ module.exports = {
 //////////////////////////////////////////
 
 //USE THE DATA CALCULATION FUNCTIONS IN HERE.
-function updateStatsDoc(coll){
+function recalculateStats(coll){
 	//Energy
 
 	//Carbon
@@ -92,7 +93,7 @@ function updateStatsDoc(coll){
 	//Distance
 
 	//Time
-	updateStatsDoc(coll, "time", "elapsed", Date.now() - beginningMillis);
+	MongoCycle.updateStats(coll, "time", "elapsed", Date.now() - beginningMillis);
 
 }
 
