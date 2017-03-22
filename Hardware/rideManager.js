@@ -24,10 +24,6 @@ module.exports = {
 		GPIOManager.init();
 		currentState = module.exports.State.Idle;
 
-		//for demoing
-		setTimeout(function(){
-			GPIOManager.startRide();
-		}, 1000);
 	},
 	exit : function()
 	{

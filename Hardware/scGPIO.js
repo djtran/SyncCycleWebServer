@@ -92,7 +92,7 @@ function updateStatsDoc(coll){
 	//Distance
 
 	//Time
-	updateStatsDoc(coll, "time", "elapsed", Date.Now() - beginningMillis);
+	updateStatsDoc(coll, "time", "elapsed", Date.now() - beginningMillis);
 
 }
 
