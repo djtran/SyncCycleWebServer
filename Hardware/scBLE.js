@@ -206,16 +206,16 @@ bleno.on('advertisingStart', function(error) {
 
                     })
 
-]
-})
-]);
-}
+                ]
+            })
+        ]);
+    }
 });
 
 module.exports = {
     starter : function(rideMan)
     {
         rideManager = rideMan;
-        GPIOManager = rideManager.getGPIOManager();
+        GPIOManager = rideMan.getGPIOManager();
     }
 }
