@@ -8,6 +8,7 @@ var rideManager;
 var GPIOManager;
 
 var name = "SyncCycle";
+var serviceUUID = "28545278768c471993afc529485f9ab0";
 
 var notifyIndex = 0;
 var statDoc = null;
@@ -45,7 +46,7 @@ bleno.on('advertisingStart', function(error) {
 
             // Define a new service
             new bleno.PrimaryService({
-                uuid : '12ab',
+                uuid : serviceUUID,
                 characteristics : [
 
                     ////////////
@@ -55,7 +56,7 @@ bleno.on('advertisingStart', function(error) {
                     ////////////
 
                     new bleno.Characteristic({
-                        uuid : 'aaa0',
+                        uuid : '28545278768c471993afc5294aaaaaa0',
                         properties : ["write"],
 
                         onWriteRequest : function(data, offset, withoutResponse, callback){
@@ -79,7 +80,7 @@ bleno.on('advertisingStart', function(error) {
                     ////////////
 
                     new bleno.Characteristic({
-                        uuid : 'bbb0',
+                        uuid : '28545278768c471993afc5294bbbbbb0',
                         properties : ["read"],
 
                         onReadRequest : function(offset, callback){
@@ -103,7 +104,7 @@ bleno.on('advertisingStart', function(error) {
                     // Ex: "X-Y-Z" coordinates
                     ////////////
                     new bleno.Characteristic({
-                        uuid : 'aaa2',
+                        uuid : '28545278768c471993afc5294aaaaaa2',
                         properties : ["write"],
 
                         onWriteRequest : function(data, offset, withoutResponse, callback)
@@ -126,7 +127,7 @@ bleno.on('advertisingStart', function(error) {
                     // Define a new characteristic within that service
                     new bleno.Characteristic({
                         value : null,
-                        uuid : 'ccc0',
+                        uuid : '28545278768c471993afc5294cccccc0',
                         properties : ['notify'],
                         
                         // If the client subscribes, we send out a message every .25 seconds

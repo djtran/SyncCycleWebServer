@@ -43,7 +43,7 @@ module.exports = {
 		statsUpdateInterval = setInterval(function(){
 			console.log("updating stats");
 			recalculateStats(coll);
-		}, 3000);
+		}, 2000);
 
 	},
 	getCurrentRide : function(){
@@ -82,9 +82,12 @@ module.exports = {
 //////////////////////////////////////////	
 //////////////////////////////////////////
 
+var dummyData = 5;
+
 //USE THE DATA CALCULATION FUNCTIONS IN HERE.
 function recalculateStats(coll){
 	//Energy
+	MongoCycle.updateStats(coll, "energy", "used", dummyData.toString());
 
 	//Carbon
 
@@ -93,8 +96,9 @@ function recalculateStats(coll){
 	//Distance
 
 	//Time
-	MongoCycle.updateStats(coll, "time", "elapsed", Date.now() - beginningMillis);
+	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis).toString();
 
+	dummyData++;
 }
 
 function enableSensors(){
