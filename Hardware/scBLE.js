@@ -8,7 +8,7 @@ var rideManager;
 var GPIOManager;
 
 var name = "SyncCycle";
-var serviceUUID = "28545278768c471993afc529485f9ab0";
+var serviceUUID = '12ab';
 
 var notifyIndex = 0;
 var statDoc = null;
@@ -18,7 +18,7 @@ bleno.on('stateChange', function(state) {
     console.log('Bleno state change: ' + state);
 
     if (state === 'poweredOn') {
-        bleno.startAdvertising(name,['12ab']);
+        bleno.startAdvertising(name,[serviceUUID]);
     } else {
         bleno.stopAdvertising();
     }

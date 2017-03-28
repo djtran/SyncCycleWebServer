@@ -86,6 +86,8 @@ var dummyData = 5;
 
 //USE THE DATA CALCULATION FUNCTIONS IN HERE.
 function recalculateStats(coll){
+
+	console.log(coll.collectionName);
 	//Energy
 	MongoCycle.updateStats(coll, "energy", "used", dummyData.toString());
 
