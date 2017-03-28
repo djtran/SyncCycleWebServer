@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/djtran/SyncCycleWebServer/issues"
   },
-  "homepage": "https://github.com/djtran/SyncCycleWebServer#readme"
+  "homepage": "https://github.com/djtran/SyncCycleWebServer#readme",
+  "dependencies": {
+    "bleno": "^0.4.2",
+    "express": "^4.15.2",
+    "mongodb": "^2.2.25"
+  }
 }

@@ -98,7 +98,7 @@ function recalculateStats(coll){
 	//Distance
 
 	//Time
-	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis).toString();
+	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis).toString());
 
 	dummyData++;
 }
