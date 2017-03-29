@@ -57,7 +57,7 @@ bleno.on('advertisingStart', function(error) {
 
                     new bleno.Characteristic({
                         uuid : '28545278768c471993afc5294aaaaaa0',
-                        properties : ["write"],
+                        properties : ["write",  "writeWithoutResponse"],
 
                         onWriteRequest : function(data, offset, withoutResponse, callback){
 
@@ -105,7 +105,7 @@ bleno.on('advertisingStart', function(error) {
                     ////////////
                     new bleno.Characteristic({
                         uuid : '28545278768c471993afc5294aaaaaa2',
-                        properties : ["write"],
+                        properties : ["write", "writeWithoutResponse"],
 
                         onWriteRequest : function(data, offset, withoutResponse, callback)
                         {

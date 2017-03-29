@@ -92,6 +92,8 @@ function recalculateStats(coll){
 	MongoCycle.updateStats(coll, "energy", "used", dummyData.toString());
 
 	//Carbon
+	MongoCycle.updateStats(coll, "carbon", "emissionsPrevented", 
+		8887/21.6*lastSpeeds[lastSpeeds.length-1]*Date.now()-beginningMillis);
 
 	//Speed
 
