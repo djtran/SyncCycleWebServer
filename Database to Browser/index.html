@@ -178,8 +178,8 @@ function plotSVG(data) {
         left: 50
   };
 
-  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,10]);
-  var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,5]);
+  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5]);
+  var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,10]);
 
   var xAxis = d3.svg.axis().scale(xScale);
   var yAxis = d3.svg.axis()
