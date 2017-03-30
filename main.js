@@ -1,6 +1,6 @@
 //main.js
 
-var WebManager = require("./Webserver/webServer"),
+var WebManager = require("./Webserver/webServer");
 	RideManager = require("./Hardware/rideManager"),
 	BLEManager = require("./Hardware/scBLE");
 
