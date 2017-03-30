@@ -126,22 +126,20 @@ bleno.on('advertisingStart', function(error) {
 
                     // Define a new characteristic within that service
                     new bleno.Characteristic({
-                        value : null,
-                        uuid : '28545278768c471993afc5294cccccc0',
-                        properties : ['read'],
+                        uuid : '28545278768c471993afc5294cccccc4',
+                        properties : ["read"],
                         
                         // If the client subscribes, we send out a message every n
                         onReadRequest : function(offset, callback) {
-                            console.log("Device subscribed");
-                            if(this.notifyIndex == null)
+                            console.log("Device subscribe read");
+                            if(notifyIndex == null)
                             {
-                                this.notifyIndex = 0;
+                                notifyIndex = 0;
                             }
                             if(GPIOManager.getCurrentRide())
                             {
-                                mongoCycle.getStats(GPIOManager.getCurrentRide(), function(doc){
-                                    statDoc = doc;
-                                    
+                                if(statDoc)
+                                {
                                     switch(notifyIndex)
                                     {
                                         case 0:
@@ -187,16 +185,14 @@ bleno.on('advertisingStart', function(error) {
                                         default:
                                         break;
                                     }
-                                });
-                                this.notifyIndex++;
-                            }
-                        },
+                                }
 
-                        // If the client unsubscribes, we stop broadcasting the message
-                        onUnsubscribe : function() {
-                            console.log("Device unsubscribed");
-                            clearInterval(this.subIntervalId);
-                            clearInterval(this.intervalId);
+                                mongoCycle.getStats(GPIOManager.getCurrentRide(), function(doc){
+                                    statDoc = doc;
+                                });
+                                notifyIndex++;
+                                notifyIndex = notifyIndex % 8;
+                            }
                         },
 
                     })
