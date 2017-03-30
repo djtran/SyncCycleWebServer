@@ -35,16 +35,14 @@ module.exports = {
 		MongoCycle.createRide(db, new Date(), 1, function(collection){
 			coll = collection;
 			enableSensors();
+			statsUpdateInterval = setInterval(function(){
+				console.log("updating stats");
+				recalculateStats(coll);
+			}, 2000);
 		});
 		beginningMillis = Date.now();
 		lastTime = beginningMillis;
 		lastSpeeds = [0,0,0,0,0];
-
-		statsUpdateInterval = setInterval(function(){
-			console.log("updating stats");
-			recalculateStats(coll);
-		}, 2000);
-
 	},
 	getCurrentRide : function(){
 		return coll;

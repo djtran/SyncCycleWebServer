@@ -128,69 +128,68 @@ bleno.on('advertisingStart', function(error) {
                     new bleno.Characteristic({
                         value : null,
                         uuid : '28545278768c471993afc5294cccccc0',
-                        properties : ['notify'],
+                        properties : ['read'],
                         
-                        // If the client subscribes, we send out a message every .25 seconds
-                        onSubscribe : function(maxValueSize, updateValueCallback) {
+                        // If the client subscribes, we send out a message every n
+                        onReadRequest : function(offset, callback) {
                             console.log("Device subscribed");
-                            this.intervalId = setInterval(function(){
-                                if(GPIOManager.getCurrentRide())
-                                {
-                                    mongoCycle.getStats(GPIOManager.getCurrentRide(), function(doc){
-                                        statDoc = doc;
+                            if(this.notifyIndex == null)
+                            {
+                                this.notifyIndex = 0;
+                            }
+                            if(GPIOManager.getCurrentRide())
+                            {
+                                mongoCycle.getStats(GPIOManager.getCurrentRide(), function(doc){
+                                    statDoc = doc;
+                                    
+                                    switch(notifyIndex)
+                                    {
+                                        case 0:
+                                        console.log("notifying energy used");
+                                        callback(this.RESULT_SUCCESS, new Buffer("energyUsed:" + statDoc.energy.used.toString()));
+                                        break;
 
-                                        for(notifyIndex = 0; notifyIndex < 8; notifyIndex++){
-                                            switch(notifyIndex)
-                                            {
-                                                case 0:
-                                                console.log("notifying energy used");
-                                                updateValueCallback(new Buffer("energyUsed:" + statDoc.energy.used.toString()));
-                                                break;
+                                        case 1:
+                                        console.log("notifying energy equivalent");
+                                        callback(this.RESULT_SUCCESS, new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString()));
+                                        break;
 
-                                                case 1:
-                                                console.log("notifying energy equivalent");
-                                                updateValueCallback(new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString()));
-                                                break;
+                                        case 2:
+                                        console.log("notifying energy savings");
+                                        callback(this.RESULT_SUCCESS, new Buffer("energySav:" + statDoc.energy.savings.toString()));
+                                        break;
 
-                                                case 2:
-                                                console.log("notifying energy savings");
-                                                updateValueCallback(new Buffer("energySav:" + statDoc.energy.savings.toString()));
-                                                break;
+                                        case 3:
+                                        console.log("notifying carbon emissions");
+                                        callback(this.RESULT_SUCCESS, new Buffer("carbonEm:" + statDoc.carbon.emissionsPrevented.toString()));
+                                        break;
 
-                                                case 3:
-                                                console.log("notifying carbon emissions");
-                                                updateValueCallback(new Buffer("carbonEm:" + statDoc.carbon.emissionsPrevented.toString()));
-                                                break;
+                                        case 4:
+                                        console.log("notifying avg speed");
+                                        callback(this.RESULT_SUCCESS, new Buffer("speedAvg:"+statDoc.speed.average.toString()));
+                                        break;
 
-                                                case 4:
-                                                console.log("notifying avg speed");
-                                                updateValueCallback(new Buffer("speedAvg:"+statDoc.speed.average.toString()));
-                                                break;
+                                        case 5:
+                                        console.log("notifying top speed");
+                                        callback(this.RESULT_SUCCESS, new Buffer("speedTop:"+ statDoc.speed.top.toString()));
+                                        break;
 
-                                                case 5:
-                                                console.log("notifying top speed");
-                                                updateValueCallback(new Buffer("speedTop:"+ statDoc.speed.top.toString()));
-                                                break;
+                                        case 6:
+                                        console.log("notifying distance traveled");
+                                        callback(this.RESULT_SUCCESS, new Buffer("distanceTra:" + statDoc.distance.traveled.toString()));
+                                        break;
 
-                                                case 6:
-                                                console.log("notifying distance traveled");
-                                                updateValueCallback(new Buffer("distanceTra:" + statDoc.distance.traveled.toString()));
-                                                break;
+                                        case 7:
+                                        console.log("notifying time elapsed");
+                                        callback(this.RESULT_SUCCESS, new Buffer("timeEla:" + statDoc.time.elapsed.toString()));
+                                        break;
 
-                                                case 7:
-                                                console.log("notifying time elapsed");
-                                                updateValueCallback(new Buffer("timeEla:" + statDoc.time.elapsed.toString()));
-                                                break;
-
-                                                default:
-                                                break;
-                                            }
-                                        }
-
-                                        //End for-loop
-                                    });
-                                }
-                            }, 3000);
+                                        default:
+                                        break;
+                                    }
+                                });
+                                this.notifyIndex++;
+                            }
                         },
 
                         // If the client unsubscribes, we stop broadcasting the message
