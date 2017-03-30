@@ -1,0 +1,19 @@
+{
+  "name": "synccycle",
+  "version": "1.0.0",
+  "description": "Web Server to serve up graphical overview of bike statistics",
+  "main": "webserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djtran/SyncCycleWebServer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djtran/SyncCycleWebServer/issues"
+  },
+  "homepage": "https://github.com/djtran/SyncCycleWebServer#readme"
+}
