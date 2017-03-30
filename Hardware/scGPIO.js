@@ -54,7 +54,7 @@ module.exports = {
 		}
 		var thisTime = Date.now();
 		var time = thisTime - beginningMillis;
-		time = time/1000;
+		time = time/3600000;
 
 		MongoCycle.addDataPoint(coll, MongoCycle.Sensor.location, time, locationData);
 	},
@@ -91,7 +91,7 @@ function recalculateStats(coll){
 
 	//Carbon
 	MongoCycle.updateStats(coll, "carbon", "emissionsPrevented", 
-		8887/21.6*lastSpeeds[lastSpeeds.length-1]*(Date.now()-beginningMillis)/1000/3600);
+		8887/21.6*lastSpeeds[lastSpeeds.length-1]*(Date.now()-beginningMillis)/3600000);
 
 	//Speed
 	averageSpeed(function(topSpeed,averageSpeed){
@@ -105,7 +105,7 @@ function recalculateStats(coll){
 	});
 
 	//Time
-	MongoCycle.updateStats(coll, "time", "elapsed", ((Date.now() - beginningMillis)/1000/3600).toString());
+	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis)/3600000);
 
 	dummyData++;
 }
@@ -140,7 +140,7 @@ function enableSensors(){
 				speed = updateSpeed(speed);
 
 				//milliseconds to seconds
-				time = time/1000;
+				time = time/3600000;
 
 				console.log("Adding t: " + time + " v: " + speed + " to db");
 				MongoCycle.addDataPoint(coll, MongoCycle.Sensor.speedometer, time, speed);
