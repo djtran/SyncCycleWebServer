@@ -39,10 +39,11 @@ module.exports = {
 				console.log("updating stats");
 				recalculateStats(coll);
 			}, 2000);
+
+			beginningMillis = Date.now();
+			lastTime = beginningMillis;
+			lastSpeeds = [0,0,0,0,0];
 		});
-		beginningMillis = Date.now();
-		lastTime = beginningMillis;
-		lastSpeeds = [0,0,0,0,0];
 	},
 	getCurrentRide : function(){
 		return coll;
@@ -105,7 +106,7 @@ function recalculateStats(coll){
 	});
 
 	//Time
-	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis)/3600000);
+	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis)/60000);
 
 	dummyData++;
 }
@@ -139,8 +140,8 @@ function enableSensors(){
 				lastTime = thisTime;
 				speed = updateSpeed(speed);
 
-				//milliseconds to seconds
-				time = time/3600000;
+				//milliseconds to minutes
+				time = time/60000;
 
 				console.log("Adding t: " + time + " v: " + speed + " to db");
 				MongoCycle.addDataPoint(coll, MongoCycle.Sensor.speedometer, time, speed);
@@ -182,7 +183,6 @@ function averageSpeed(callback)
 {
 	MongoCycle.getDataPoints(coll, MongoCycle.Sensor.speedometer, 5000, function(docs){
 		var totalSpeed = 0;
-		var totalTime = 0;
 		var topSpeed = 0;
 		for(var i = 0; i < docs.length; i++)
 		{
@@ -191,9 +191,8 @@ function averageSpeed(callback)
 				topSpeed = docs[i].value;
 			}
 			totalSpeed += docs[i].value;
-			totalTime += docs[i].time;
 		}
 
-		callback(topSpeed, Math.floor(totalSpeed/totalTime)); 
+		callback(topSpeed, totalSpeed/docs.length); 
 	});
 }

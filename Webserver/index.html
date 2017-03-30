@@ -118,21 +118,21 @@
           <h2><strong>CO2 EMISSIONS AVOIDED</strong></h2>
         </div>
         <div class="col-md-3">
-          <h2><strong>$ SAVED ON GAS</strong></h2>
-        </div>
+          <h2><strong>AVERAGE SPEED</strong></h2>
+	 </div>
       </div>
       <div class="row extra-stats" style="margin-top:-600px">
         <div class="col-md-3">
-          <h3>3.4 mi</h3>
+          <h3 class="totalDistance"></h3>
         </div>
         <div class="col-md-3">
-          <h3>19:43</h3>
+          <h3 class="totalDuration"></h3>
         </div>
         <div class="col-md-3">
-          <h3>525 g CO2</h3>
+          <h3 class="emissionsPrevented"></h3>
         </div>
         <div class="col-md-3">
-          <h3>$0.36</h3>
+          <h3 class="averageSpeed"></h3>
         </div>
       </div>
 
@@ -287,6 +287,14 @@ $(document).one("click", ".rideButton", function() {
 
         plotSVG(fullData);
         console.log(fullData);
+    });
+
+    $.getJSON("http://localhost:8080/stats/" + this.id + "/", function(result){
+	data = result;
+	$(".averageSpeed").text(data.speed.average);
+	$(".totalDistance").text(data.distance.traveled);
+	$(".emissionsPrevented").text(data.carbon.emissionsPrevented);
+	$(".totalDuration").text(data.time.elapsed);
     });
 
     //var myChart = graph(times, values);
