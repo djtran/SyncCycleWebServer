@@ -130,6 +130,12 @@ function enableSensors(){
 			}
 			else
 			{
+				if (timefuck != null)
+				{
+					clearTimeout(timefuck);
+
+				}
+				timefuck = setTimeout(module.exports.endRide, 120000)
 				var thisTime = Date.now();
 				var time = lastTime - beginningMillis;
 
@@ -149,14 +155,34 @@ function enableSensors(){
 		}
 	});
 }
-
+var timefuck;
 function idleSensors()
 {
 	speedometer.unwatchAll();
 	//TO DO, keep one or two specific sensors on but repurpose them to potentially
 	//start a new ride.
 	speedometer.watch(function(err,value){
-		//TO DO
+
+		var counter =0;
+
+		if(err)
+		{
+			console.log("Error with speedometer, GPIO pin 2");
+		}
+		else 
+		{
+			if(timefuck != null)
+			{
+				counter++;
+			}
+
+			else
+			{
+				timefuck = setTimeout(function({if(counter >=3) {module.exports.startRide(); timefuck = null;}}), 3);
+
+			}
+		}
+
 	})
 }
 
