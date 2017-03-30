@@ -30,6 +30,7 @@ module.exports = {
 			db = database;
 			module.exports.endRide();
 		});
+		idleSensors();
 	},
 	startRide : function(){
 		MongoCycle.createRide(db, new Date(), 1, function(collection){
@@ -43,6 +44,7 @@ module.exports = {
 			beginningMillis = Date.now();
 			lastTime = beginningMillis;
 			lastSpeeds = [0,0,0,0,0];
+			timefuck = setTimeout(module.exports.endRide, 300000); //set timeout for 5 minutes
 		});
 	},
 	getCurrentRide : function(){
@@ -67,6 +69,8 @@ module.exports = {
 		idleSensors();
 
 		clearInterval(statsUpdateInterval);
+		console.log("ending ride...");
+		timefuck = null;
 	},
 	exit : function()
 	{
@@ -135,7 +139,7 @@ function enableSensors(){
 					clearTimeout(timefuck);
 
 				}
-				timefuck = setTimeout(module.exports.endRide, 120000)
+				timefuck = setTimeout(module.exports.endRide, 12000)//0)
 				var thisTime = Date.now();
 				var time = lastTime - beginningMillis;
 
@@ -156,15 +160,13 @@ function enableSensors(){
 	});
 }
 var timefuck;
+var counter = 0;
 function idleSensors()
 {
 	speedometer.unwatchAll();
 	//TO DO, keep one or two specific sensors on but repurpose them to potentially
 	//start a new ride.
 	speedometer.watch(function(err,value){
-
-		var counter =0;
-
 		if(err)
 		{
 			console.log("Error with speedometer, GPIO pin 2");
@@ -174,11 +176,13 @@ function idleSensors()
 			if(timefuck != null)
 			{
 				counter++;
+				//console.log("fuck #" + counter.toString());
 			}
 
 			else
 			{
-				timefuck = setTimeout(function({if(counter >=3) {module.exports.startRide(); timefuck = null;}}), 3);
+				//console.log("new fuck");
+				timefuck = setTimeout(function(){if(counter >= 3) {/*console.log("> 3 fucks");*/ module.exports.startRide();} else { /*console.log("not enough fucks, why?");*/ } counter = 0; timefuck = null;}, 2500);
 
 			}
 		}
