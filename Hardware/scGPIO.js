@@ -91,14 +91,21 @@ function recalculateStats(coll){
 
 	//Carbon
 	MongoCycle.updateStats(coll, "carbon", "emissionsPrevented", 
-		8887/21.6*lastSpeeds[lastSpeeds.length-1]*Date.now()-beginningMillis);
+		8887/21.6*lastSpeeds[lastSpeeds.length-1]*(Date.now()-beginningMillis)/1000/3600);
 
 	//Speed
+	averageSpeed(function(topSpeed,averageSpeed){
+		MongoCycle.updateStats(coll, "speed", "average", averageSpeed);
+		MongoCycle.updateStats(coll, "speed", "top", topSpeed);
+	});
 
 	//Distance
+	MongoCycle.getStats(coll, function(doc){
+		var avgSpd = parseInt(doc.speed.average, 10);
+	});
 
 	//Time
-	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis).toString());
+	MongoCycle.updateStats(coll, "time", "elapsed", ((Date.now() - beginningMillis)/1000/3600).toString());
 
 	dummyData++;
 }
@@ -169,4 +176,24 @@ function updateSpeed(value){
 	calculate = calculate/3;
 
 	return calculate;
+}
+
+function averageSpeed(callback)
+{
+	MongoCycle.getDataPoints(coll, MongoCycle.Sensor.speedometer, 5000, function(docs){
+		var totalSpeed = 0;
+		var totalTime = 0;
+		var topSpeed = 0;
+		for(var i = 0; i < docs.length; i++)
+		{
+			if(docs[i].value > topSpeed)
+			{
+				topSpeed = docs[i].value;
+			}
+			totalSpeed += docs[i].value;
+			totalTime += docs[i].time;
+		}
+
+		callback(topSpeed, Math.floor(totalSpeed/totalTime)); 
+	});
 }
