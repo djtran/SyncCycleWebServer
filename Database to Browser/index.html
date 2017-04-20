@@ -6,6 +6,10 @@
     margin: 15px auto;
   }
 
+  .title {
+    background-color: #aaa3e0;
+  }
+
   html, body, .container-fluid, .col-md-3, .row {
     height:100%;
   }
@@ -79,9 +83,6 @@
 </head>
 <body>
 
-<!-- <h3>My Google Maps Demo</h3>
-<div id="map">
-</div> -->
 
 <div class="container-fluid">
 
@@ -109,7 +110,7 @@
 
       <div class="row extra-stats">
         <div class="col-md-3">
-          <h2><strong>TOTAL DISTANCE TRAVELLED</strong></h2>
+          <h2><strong>TOTAL DISTANCE TRAVELLED in miles</strong></h2>
         </div>
         <div class="col-md-3">
           <h2><strong>DURATION OF RIDE</strong></h2>
@@ -144,23 +145,6 @@
 
 
 </div>
-
-<!-- <script>
-  function initMap() {
-    var uluru = {lat: -25.363, lng: 131.044};
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 4,
-      center: uluru
-    });
-    var marker = new google.maps.Marker({
-      position: uluru,
-      map: map
-    });
-  }
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0CuPxHmmokSyqM3DfvhlNbNsL1kxJkio&callback=initMap">
-</script> -->
 
 <script>
 
@@ -256,17 +240,8 @@ $(document).one("click", ".rideButton", function() {
 
     var fullData;
 
-    var newTitle = '<h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1>';
-    //$(document).not($(".title").has("h2")).append(newTitle);
-
-    //$(".title:not(:has(>h2)").append(newTitle);
-
+    var newTitle = '<h1 class="rideTitle">Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1>';
     $(".title").append(newTitle);
-
-    // if ($(".title").length > 0) {
-    //
-    // }
-    //$(".title").has( "h2" ).length ? : $(".title").has("h2").append(newTitle);
 
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
         fullData = result;

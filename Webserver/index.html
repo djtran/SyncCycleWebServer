@@ -10,13 +10,18 @@
     height:100%;
   }
 
+  .buffer {
+    background-color: #EEEEEE;
+  }
+
   #mid-strip {
     background-color: #00a3e0;
   }
 
 
-  h6, h2, h3{
-    text-align: center;
+  h6, h2, h3, h4 {
+    font-family: 'Titillium Web', sans-serif;
+    text-align: left;
   }
 
   #main-row > div, #buffer{
@@ -33,7 +38,7 @@
     height: 100%;
   }
 
-  * {
+  button {
     font-family: 'Open Sans', sans-serif;
   }
 
@@ -74,6 +79,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
   <script src="http://d3js.org/d3.v3.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
   <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet"> -->
 </head>
@@ -86,20 +92,20 @@
 <div class="container-fluid">
 
   <div class="row" id="main-row">
-    <div class="col-md-3 no-float" id="sidebar">
+    <div class="col-md-3 col-lg-3 no-float" id="sidebar">
       <img src="http://naturalenergywyre.co.uk/wp-content/uploads/2015/02/1000px-National_Grid.svg_.png"></img>
       <div class="button-row row">
 
         <button type="button" class="myButton">Refresh Data</button>
       </div>
     </div>
-    <div class="col-md-1" id="buffer" style="height: 100%;">
+    <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
       <div class="row">
         <div class="col-md-6" id="mid-strip"></div>
         <div class="col-md-6"></div>
       </div>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-7 col-lg-7 buffer" style="height: 100%;">
       <div class="title row" style="backgroundColor: #00c1d5">
       </div>
       <div class="dump row" style="margin-top: -650px;">
@@ -108,7 +114,7 @@
 
 
       <div class="row extra-stats">
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <h2><strong>TOTAL DISTANCE TRAVELLED</strong></h2>
         </div>
         <div class="col-md-3">
@@ -119,26 +125,32 @@
         </div>
         <div class="col-md-3">
           <h2><strong>AVERAGE SPEED</strong></h2>
-	 </div>
-      </div>
-      <div class="row extra-stats" style="margin-top:-600px">
-        <div class="col-md-3">
+	      </div> -->
+
+        <div class="col-md-7 col-md-offset-1">
+          <h3><strong>Total Distance Travelled:</strong></h2>
+          <h3><strong>Average Speed:</strong></h2>
+          <h3><strong>Duration of Ride:</strong></h2>
+          <h3><strong>CO2 Emissions Avoided:</strong></h2>
+        </div>
+        <div class="col-md-4">
           <h3 class="totalDistance"></h3>
-        </div>
-        <div class="col-md-3">
+          <h3 class="averageSpeed"></h3>
           <h3 class="totalDuration"></h3>
-        </div>
-        <div class="col-md-3">
           <h3 class="emissionsPrevented"></h3>
         </div>
-        <div class="col-md-3">
-          <h3 class="averageSpeed"></h3>
-        </div>
+	     </div>
+       <div class="row extra-stats" style="margin-top:-600px">
+         <div class="col-md-3">
+
+
+       </div>
       </div>
+
 
 
     </div>
-    <div class="col-md-1">
+    <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
     </div>
   </div>
 
@@ -256,7 +268,7 @@ $(document).one("click", ".rideButton", function() {
 
     var fullData;
 
-    var newTitle = '<h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1>';
+    var newTitle = '<div class="rideTitle"><h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1></div>';
     //$(document).not($(".title").has("h2")).append(newTitle);
 
     //$(".title:not(:has(>h2)").append(newTitle);
