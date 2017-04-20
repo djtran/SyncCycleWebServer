@@ -19,6 +19,7 @@ process.on('SIGINT', function(){
 
 function closeAll()
 {
+	BLEManager.close();
 	WebManager.teardown();
 	RideManager.exit();
 }

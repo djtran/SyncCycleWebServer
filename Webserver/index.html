@@ -10,13 +10,18 @@
     height:100%;
   }
 
+  .buffer {
+    background-color: #EEEEEE;
+  }
+
   #mid-strip {
     background-color: #00a3e0;
   }
 
 
-  h6, h2, h3{
-    text-align: center;
+  h6, h2, h3, h4 {
+    font-family: 'Titillium Web', sans-serif;
+    text-align: left;
   }
 
   #main-row > div, #buffer{
@@ -33,7 +38,7 @@
     height: 100%;
   }
 
-  * {
+  button {
     font-family: 'Open Sans', sans-serif;
   }
 
@@ -74,93 +79,73 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
   <script src="http://d3js.org/d3.v3.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
   <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet"> -->
 </head>
 <body>
 
-<!-- <h3>My Google Maps Demo</h3>
-<div id="map">
-</div> -->
 
 <div class="container-fluid">
 
   <div class="row" id="main-row">
-    <div class="col-md-3 no-float" id="sidebar">
+    <div class="col-md-3 col-lg-3 no-float" id="sidebar">
       <img src="http://naturalenergywyre.co.uk/wp-content/uploads/2015/02/1000px-National_Grid.svg_.png"></img>
-      <div class="button-row row">
+      <div class="button-row row text-center">
 
-        <button type="button" class="myButton">Refresh Data</button>
+        <button type="button" class="myButton btn btn-primary">Refresh Data</button>
+        <ul class="dataButtonList col-md-12 list-group">
+        </ul>
+
       </div>
     </div>
-    <div class="col-md-1" id="buffer" style="height: 100%;">
+    <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
       <div class="row">
         <div class="col-md-6" id="mid-strip"></div>
         <div class="col-md-6"></div>
       </div>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-7 col-lg-7 buffer" style="height: 100%;">
       <div class="title row" style="backgroundColor: #00c1d5">
       </div>
       <div class="dump row" style="margin-top: -650px;">
-        <svg id="chart" width="1000" height="500"></svg>
+        <div class="panel">
+        <svg id="chart" width="1000" height="380"></svg>
+        </div>
       </div>
 
 
-      <div class="row extra-stats">
-        <div class="col-md-3">
-          <h2><strong>TOTAL DISTANCE TRAVELLED</strong></h2>
+      <div class="row extra-stats panel panel-content" style="height: 200px">
+
+        <div class="col-md-7 col-md-offset-1">
+          <h3 id="totalDistance"><strong></strong></h2>
+          <h3 id="averageSpeed"><strong></strong></h2>
+          <h3 id="totalDuration"><strong></strong></h2>
+          <h3 id="emissionsPrevented"><strong></strong></h2>
         </div>
-        <div class="col-md-3">
-          <h2><strong>DURATION OF RIDE</strong></h2>
-        </div>
-        <div class="col-md-3">
-          <h2><strong>CO2 EMISSIONS AVOIDED</strong></h2>
-        </div>
-        <div class="col-md-3">
-          <h2><strong>AVERAGE SPEED</strong></h2>
-	 </div>
-      </div>
-      <div class="row extra-stats" style="margin-top:-600px">
-        <div class="col-md-3">
+        <div class="col-md-4">
           <h3 class="totalDistance"></h3>
-        </div>
-        <div class="col-md-3">
+          <h3 class="averageSpeed"></h3>
           <h3 class="totalDuration"></h3>
-        </div>
-        <div class="col-md-3">
           <h3 class="emissionsPrevented"></h3>
         </div>
-        <div class="col-md-3">
-          <h3 class="averageSpeed"></h3>
-        </div>
+	     </div>
+       <div class="row extra-stats" style="margin-top:-600px">
+         <div class="col-md-3">
+
+
+       </div>
       </div>
+
 
 
     </div>
-    <div class="col-md-1">
+    <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
     </div>
   </div>
 
 
 </div>
-
-<!-- <script>
-  function initMap() {
-    var uluru = {lat: -25.363, lng: 131.044};
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 4,
-      center: uluru
-    });
-    var marker = new google.maps.Marker({
-      position: uluru,
-      map: map
-    });
-  }
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0CuPxHmmokSyqM3DfvhlNbNsL1kxJkio&callback=initMap">
-</script> -->
 
 <script>
 
@@ -241,9 +226,9 @@ $('.myButton').on("click", function(){
     // GET RIDES
     $.getJSON("http://localhost:8080/list/rides", function(result){
         $.each(result, function(i, field){
-            var newElement = '<button type="button" class="rideButton col-md-12" id="'
+            var newElement = '<button type="button" class="rideButton list-group-item" id="'
             + field + '" > Ride ' + (i+1) + ' </button>';
-            $(".button-row").append(newElement);
+            $(".dataButtonList").append(newElement);
             console.log(newElement);
         });
 
@@ -256,17 +241,9 @@ $(document).one("click", ".rideButton", function() {
 
     var fullData;
 
-    var newTitle = '<h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1>';
-    //$(document).not($(".title").has("h2")).append(newTitle);
-
-    //$(".title:not(:has(>h2)").append(newTitle);
+    var newTitle = '<div class="rideTitle"><h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1></div>';
 
     $(".title").append(newTitle);
-
-    // if ($(".title").length > 0) {
-    //
-    // }
-    //$(".title").has( "h2" ).length ? : $(".title").has("h2").append(newTitle);
 
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
         fullData = result;
@@ -291,10 +268,15 @@ $(document).one("click", ".rideButton", function() {
 
     $.getJSON("http://localhost:8080/stats/" + this.id + "/", function(result){
 	data = result;
-	$(".averageSpeed").text(data.speed.average);
-	$(".totalDistance").text(data.distance.traveled);
-	$(".emissionsPrevented").text(data.carbon.emissionsPrevented);
-	$(".totalDuration").text(data.time.elapsed);
+
+  $("#totalDistance").text("Total Distance Travelled:");
+  $("#averageSpeed").text("Average Speed:");
+  $("#emissionsPrevented").text("CO2 Emissions Avoided:");
+  $("#totalDuration").text("Duration of Ride:");
+	$(".averageSpeed").text(data.speed.average + " mph");
+	$(".totalDistance").text(data.distance.traveled + " mi");
+	$(".emissionsPrevented").text(data.carbon.emissionsPrevented + " ppm");
+	$(".totalDuration").text(data.time.elapsed + " minutes");
     });
 
     //var myChart = graph(times, values);

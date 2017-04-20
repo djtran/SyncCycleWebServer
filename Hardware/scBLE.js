@@ -282,4 +282,9 @@ module.exports = {
         rideManager = rideMan;
         GPIOManager = rideMan.getGPIOManager();
     }
+    close : function()
+    {
+        bleno.disconnect();
+        bleno.stopAdvertising();
+    }
 }
