@@ -127,10 +127,82 @@ bleno.on('advertisingStart', function(error) {
                     // Define a new characteristic within that service
                     new bleno.Characteristic({
                         uuid : '28545278768c471993afc5294cccccc4',
-                        properties : ["read"],
+                        properties : ['notify'],
+                        
+                        // If the client subscribes, we send out a message every .25 seconds
+                        onSubscribe : function(maxValueSize, updateValueCallback) {
+                            console.log("Device subscribed");
+                            this.intervalId = setInterval(function(){
+                                if(GPIOManager.getCurrentRide())
+                                {
+                                    mongoCycle.getStats(GPIOManager.getCurrentRide(), function(doc){
+                                        statDoc = doc;
+
+                                        for(notifyIndex = 0; notifyIndex < 8; notifyIndex++){
+                                            switch(notifyIndex)
+                                            {
+                                                case 0:
+                                                console.log("notifying energy used");
+                                                updateValueCallback(new Buffer("energyUsed:" + statDoc.energy.used.toString()));
+                                                break;
+
+                                                case 1:
+                                                console.log("notifying energy equivalent");
+                                                updateValueCallback(new Buffer("energyEquiv:" + statDoc.energy.equivalent.toString()));
+                                                break;
+
+                                                case 2:
+                                                console.log("notifying energy savings");
+                                                updateValueCallback(new Buffer("energySav:" + statDoc.energy.savings.toString()));
+                                                break;
+
+                                                case 3:
+                                                console.log("notifying carbon emissions");
+                                                updateValueCallback(new Buffer("carbonEm:" + statDoc.carbon.emissionsPrevented.toString()));
+                                                break;
+
+                                                case 4:
+                                                console.log("notifying avg speed");
+                                                updateValueCallback(new Buffer("speedAvg:"+statDoc.speed.average.toString()));
+                                                break;
+
+                                                case 5:
+                                                console.log("notifying top speed");
+                                                updateValueCallback(new Buffer("speedTop:"+ statDoc.speed.top.toString()));
+                                                break;
+
+                                                case 6:
+                                                console.log("notifying distance traveled");
+                                                updateValueCallback(new Buffer("distanceTra:" + statDoc.distance.traveled.toString()));
+                                                break;
+
+                                                case 7:
+                                                console.log("notifying time elapsed");
+                                                updateValueCallback(new Buffer("timeEla:" + statDoc.time.elapsed.toString()));
+                                                break;
+
+                                                default:
+                                                break;
+                                            }
+                                        }
+
+                                        //End for-loop
+                                    });
+                                }
+                            }, 3000);
+                        },
+
+                        // If the client unsubscribes, we stop broadcasting the message
+                        onUnsubscribe : function() {
+                            console.log("Device unsubscribed");
+                            clearInterval(this.subIntervalId);
+                            clearInterval(this.intervalId);
+                        },
+                        /*
+                        properties : ["notify"],
                         
                         // If the client subscribes, we send out a message every n
-                        onReadRequest : function(offset, callback) {
+                        onSubscribe : function(maxValueSize, updateValueCallback) {
                             console.log("Device subscribe read");
                             if(notifyIndex == null)
                             {
@@ -194,6 +266,7 @@ bleno.on('advertisingStart', function(error) {
                                 notifyIndex = notifyIndex % 8;
                             }
                         },
+                        */
 
                     })
 
