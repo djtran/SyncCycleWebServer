@@ -30,6 +30,7 @@ module.exports = {
 			db = database;
 			module.exports.endRide();
 		});
+		idleSensors();
 	},
 	startRide : function(){
 		MongoCycle.createRide(db, new Date(), 1, function(collection){
@@ -39,10 +40,12 @@ module.exports = {
 				console.log("updating stats");
 				recalculateStats(coll);
 			}, 2000);
+
+			beginningMillis = Date.now();
+			lastTime = beginningMillis;
+			lastSpeeds = [0,0,0,0,0];
+			timefuck = setTimeout(module.exports.endRide, 300000); //set timeout for 5 minutes
 		});
-		beginningMillis = Date.now();
-		lastTime = beginningMillis;
-		lastSpeeds = [0,0,0,0,0];
 	},
 	getCurrentRide : function(){
 		return coll;
@@ -66,6 +69,8 @@ module.exports = {
 		idleSensors();
 
 		clearInterval(statsUpdateInterval);
+		console.log("ending ride...");
+		timefuck = null;
 	},
 	exit : function()
 	{
@@ -105,7 +110,7 @@ function recalculateStats(coll){
 	});
 
 	//Time
-	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis)/3600000);
+	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis)/60000);
 
 	dummyData++;
 }
@@ -134,7 +139,7 @@ function enableSensors(){
 					clearTimeout(timefuck);
 
 				}
-				timefuck = setTimeout(module.exports.endRide, 120000)
+				timefuck = setTimeout(module.exports.endRide, 12000)//0)
 				var thisTime = Date.now();
 				var time = lastTime - beginningMillis;
 
@@ -145,8 +150,8 @@ function enableSensors(){
 				lastTime = thisTime;
 				speed = updateSpeed(speed);
 
-				//milliseconds to seconds
-				time = time/3600000;
+				//milliseconds to minutes
+				time = time/60000;
 
 				console.log("Adding t: " + time + " v: " + speed + " to db");
 				MongoCycle.addDataPoint(coll, MongoCycle.Sensor.speedometer, time, speed);
@@ -155,15 +160,13 @@ function enableSensors(){
 	});
 }
 var timefuck;
+var counter = 0;
 function idleSensors()
 {
 	speedometer.unwatchAll();
 	//TO DO, keep one or two specific sensors on but repurpose them to potentially
 	//start a new ride.
 	speedometer.watch(function(err,value){
-
-		var counter =0;
-
 		if(err)
 		{
 			console.log("Error with speedometer, GPIO pin 2");
@@ -173,11 +176,13 @@ function idleSensors()
 			if(timefuck != null)
 			{
 				counter++;
+				//console.log("fuck #" + counter.toString());
 			}
 
 			else
 			{
-				timefuck = setTimeout(function({if(counter >=3) {module.exports.startRide(); timefuck = null;}}), 3);
+				//console.log("new fuck");
+				timefuck = setTimeout(function(){if(counter >= 3) {/*console.log("> 3 fucks");*/ module.exports.startRide();} else { /*console.log("not enough fucks, why?");*/ } counter = 0; timefuck = null;}, 2500);
 
 			}
 		}
@@ -208,7 +213,6 @@ function averageSpeed(callback)
 {
 	MongoCycle.getDataPoints(coll, MongoCycle.Sensor.speedometer, 5000, function(docs){
 		var totalSpeed = 0;
-		var totalTime = 0;
 		var topSpeed = 0;
 		for(var i = 0; i < docs.length; i++)
 		{
@@ -217,9 +221,8 @@ function averageSpeed(callback)
 				topSpeed = docs[i].value;
 			}
 			totalSpeed += docs[i].value;
-			totalTime += docs[i].time;
 		}
 
-		callback(topSpeed, Math.floor(totalSpeed/totalTime)); 
+		callback(topSpeed, totalSpeed/docs.length); 
 	});
 }

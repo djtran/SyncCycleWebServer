@@ -84,9 +84,7 @@ app.get('/data/:RideCollection/:SensorEnum', function(req, res){
 	});
 });
 
-app.get('/stats/:RideCollection', function(res,req){
-
-	console.log(req.toString());
+app.get('/stats/:RideCollection', function(req,res){
 
 	getStats(req.params.RideCollection, function(doc)
 	{

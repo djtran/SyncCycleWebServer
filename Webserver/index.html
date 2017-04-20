@@ -118,21 +118,21 @@
           <h2><strong>CO2 EMISSIONS AVOIDED</strong></h2>
         </div>
         <div class="col-md-3">
-          <h2><strong>$ SAVED ON GAS</strong></h2>
-        </div>
+          <h2><strong>AVERAGE SPEED</strong></h2>
+	 </div>
       </div>
       <div class="row extra-stats" style="margin-top:-600px">
         <div class="col-md-3">
-          <h3>3.4 mi</h3>
+          <h3 class="totalDistance"></h3>
         </div>
         <div class="col-md-3">
-          <h3>19:43</h3>
+          <h3 class="totalDuration"></h3>
         </div>
         <div class="col-md-3">
-          <h3>525 g CO2</h3>
+          <h3 class="emissionsPrevented"></h3>
         </div>
         <div class="col-md-3">
-          <h3>$0.36</h3>
+          <h3 class="averageSpeed"></h3>
         </div>
       </div>
 
@@ -178,8 +178,8 @@ function plotSVG(data) {
         left: 50
   };
 
-  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,20]);
-  var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,25]);
+  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5]);
+  var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,10]);
 
   var xAxis = d3.svg.axis().scale(xScale);
   var yAxis = d3.svg.axis()
@@ -256,7 +256,7 @@ $(document).one("click", ".rideButton", function() {
 
     var fullData;
 
-    var newTitle = '<h1>Ride ' + this.id[this.id.length - 1] + ' on 2/23/17 </h1>';
+    var newTitle = '<h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1>';
     //$(document).not($(".title").has("h2")).append(newTitle);
 
     //$(".title:not(:has(>h2)").append(newTitle);
@@ -276,17 +276,25 @@ $(document).one("click", ".rideButton", function() {
             times.unshift(obj.time);
             values.push(obj.value);
 
-            if (i == 0 || i == 19) {
-              obj.value = 0;
-            } else {
-              obj.value = Math.floor(Math.random() * 24);
-            }
+            // if (i == 0 || i == 19) {
+            //   obj.value = 0;
+            // } else {
+            //   obj.value = Math.floor(Math.random() * 24);
+            // }
 
 
         });
 
         plotSVG(fullData);
         console.log(fullData);
+    });
+
+    $.getJSON("http://localhost:8080/stats/" + this.id + "/", function(result){
+	data = result;
+	$(".averageSpeed").text(data.speed.average);
+	$(".totalDistance").text(data.distance.traveled);
+	$(".emissionsPrevented").text(data.carbon.emissionsPrevented);
+	$(".totalDuration").text(data.time.elapsed);
     });
 
     //var myChart = graph(times, values);
