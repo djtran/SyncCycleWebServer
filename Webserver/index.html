@@ -85,9 +85,6 @@
 </head>
 <body>
 
-<!-- <h3>My Google Maps Demo</h3>
-<div id="map">
-</div> -->
 
 <div class="container-fluid">
 
@@ -114,24 +111,12 @@
 
 
       <div class="row extra-stats">
-        <!-- <div class="col-md-3">
-          <h2><strong>TOTAL DISTANCE TRAVELLED</strong></h2>
-        </div>
-        <div class="col-md-3">
-          <h2><strong>DURATION OF RIDE</strong></h2>
-        </div>
-        <div class="col-md-3">
-          <h2><strong>CO2 EMISSIONS AVOIDED</strong></h2>
-        </div>
-        <div class="col-md-3">
-          <h2><strong>AVERAGE SPEED</strong></h2>
-	      </div> -->
 
         <div class="col-md-7 col-md-offset-1">
-          <h3><strong>Total Distance Travelled:</strong></h2>
-          <h3><strong>Average Speed:</strong></h2>
-          <h3><strong>Duration of Ride:</strong></h2>
-          <h3><strong>CO2 Emissions Avoided:</strong></h2>
+          <h3 id="totalDistance"><strong></strong></h2>
+          <h3 id="averageSpeed"><strong></strong></h2>
+          <h3 id="totalDuration"><strong></strong></h2>
+          <h3 id="emissionsPrevented"><strong></strong></h2>
         </div>
         <div class="col-md-4">
           <h3 class="totalDistance"></h3>
@@ -156,23 +141,6 @@
 
 
 </div>
-
-<!-- <script>
-  function initMap() {
-    var uluru = {lat: -25.363, lng: 131.044};
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 4,
-      center: uluru
-    });
-    var marker = new google.maps.Marker({
-      position: uluru,
-      map: map
-    });
-  }
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0CuPxHmmokSyqM3DfvhlNbNsL1kxJkio&callback=initMap">
-</script> -->
 
 <script>
 
@@ -269,16 +237,8 @@ $(document).one("click", ".rideButton", function() {
     var fullData;
 
     var newTitle = '<div class="rideTitle"><h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1></div>';
-    //$(document).not($(".title").has("h2")).append(newTitle);
-
-    //$(".title:not(:has(>h2)").append(newTitle);
 
     $(".title").append(newTitle);
-
-    // if ($(".title").length > 0) {
-    //
-    // }
-    //$(".title").has( "h2" ).length ? : $(".title").has("h2").append(newTitle);
 
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
         fullData = result;
@@ -303,10 +263,15 @@ $(document).one("click", ".rideButton", function() {
 
     $.getJSON("http://localhost:8080/stats/" + this.id + "/", function(result){
 	data = result;
-	$(".averageSpeed").text(data.speed.average);
-	$(".totalDistance").text(data.distance.traveled);
-	$(".emissionsPrevented").text(data.carbon.emissionsPrevented);
-	$(".totalDuration").text(data.time.elapsed);
+
+  $("#totalDistance").text("Total Distance Travelled:");
+  $("#averageSpeed").text("Average Speed:");
+  $("#emissionsPrevented").text("CO2 Emissions Avoided:");
+  $("#totalDuration").text("Duration of Ride:");
+	$(".averageSpeed").text(data.speed.average + " mph");
+	$(".totalDistance").text(data.distance.traveled + " mi");
+	$(".emissionsPrevented").text(data.carbon.emissionsPrevented + " ppm");
+	$(".totalDuration").text(data.time.elapsed + " minutes");
     });
 
     //var myChart = graph(times, values);
