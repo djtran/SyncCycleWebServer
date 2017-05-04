@@ -62,8 +62,6 @@ module.exports = {
 		MongoCycle.addDataPoint(coll, MongoCycle.Sensor.location, time, locationData);
 	},
 	endRide : function(){
-		MongoCycle.addDataPoint(coll, MongoCycle.Sensor.speedometer, (Date.now()-beginningMillis)/60000, 0)
-
 		coll = null;
 		beginningMillis = 0;
 		lastTime = 0;
