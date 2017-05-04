@@ -110,150 +110,162 @@
 <body>
 
 
-<div class="container-fluid">
+  <div class="container-fluid">
 
-  <div class="row vert-fill" id="main-row">
-    <div class="col-md-3 col-lg-3 no-float" id="sidebar">
-      <img src="images/ngLogo.png"></img>
-      <div class="button-row row text-center">
+    <div class="row vert-fill" id="main-row">
+      <div class="col-md-3 col-lg-3 no-float" id="sidebar">
+        <img src="images/ngLogo.png"></img>
+        <div class="button-row row text-center">
 
-        <button type="button" class="refreshButton btn btn-info">Refresh Data</button>
-        <br>
-        <ul class="dataButtonList col-md-12 list-group">
-        </ul>
+          <button type="button" class="refreshButton btn btn-info">Refresh Data</button>
+          <br>
+          <ul class="dataButtonList col-md-12 list-group">
+          </ul>
 
-      </div>
-    </div>
-    <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
-    </div>
-    <div class="col-md-7 col-lg-7 buffer padme5" style="height: 100%;">
-      <div class="title" style="backgroundColor: #00c1d5">
-      </div>
-      <div class="dump">
-        <div class="panel padme5">
-        <svg id="chart" width="700" height="380" ></svg>
         </div>
       </div>
+      <div class="col-md-1 buffer" style="height: 100%;">
+      </div>
+      <div class="col-md-7 buffer padme5" style="height: 100%;">
+        <div class="title" style="backgroundColor: #00c1d5">
+        </div>
+        <div class="dump">
+          <div class="panel padme5">
+            <svg id="chart" width="700" height="380" ></svg>
+          </div>
+        </div>
 
 
-      <div class="row extra-stats panel panel-content padme5">
-        <div class="col-md-7 col-md-offset-1">
-          <h3 id="totalDistance"><strong></strong></h2>
-          <h3 id="averageSpeed"><strong></strong></h2>
-          <h3 id="totalDuration"><strong></strong></h2>
-          <h3 id="emissionsPrevented"><strong></strong></h2>
+        <div class="row extra-stats panel panel-content padme5">
+          <div class="col-md-6">
+            <h3 id="totalDistance"><strong></strong></h3>
+            <h3 id="averageSpeed"><strong></strong></h3>
+            <h3 id="topSpeed"><strong></strong></h3>
+            <h3 id="totalDuration"><strong></strong></h3>
+            <h3 id="emissionsPrevented"><strong></strong></h3>
+
+            <h3 id="energyUsed"><strong></strong></h3>
+            <h3 id="energyEquiv"><strong></strong></h3>
+            <h3 id="energySaved"><strong></strong></h3>
+          </div>
+          <div class="col-md-6">
+            <h3 class="totalDistance"></h3>
+            <h3 class="averageSpeed"></h3>
+            <h3 class="topSpeed"></h3>
+            <h3 class="totalDuration"></h3>
+            <h3 class="emissionsPrevented"></h3>
+
+            <h3 class="energyUsed"></h3>
+            <h3 class="energyEquiv"></h3>
+            <h3 class="energySaved"></h3>
+          </div>
         </div>
-        <div class="col-md-4">
-          <h3 class="totalDistance"></h3>
-          <h3 class="averageSpeed"></h3>
-          <h3 class="totalDuration"></h3>
-          <h3 class="emissionsPrevented"></h3>
-        </div>
-	     </div>
-       <div class="row extra-stats">
+        <div class="row extra-stats">
          <div class="col-md-3">
 
+         </div>
        </div>
-      </div>
 
 
 
-    </div>
-    <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
-    </div>
-  </div>
+     </div>
+     <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
+     </div>
+   </div>
 
-<a href="#" id="oblivion"><img class="doggo" src="images/dog.png"></img></a>
+   <a href="#" id="oblivion"><img class="doggo" src="images/dog.png"></img></a>
 
-</div>
+ </div>
 
-<script>
-var toggle = true;
-$(document.getElementById("oblivion")).on("click", function(){
+ <script>
+  const months = [null, "January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"];
+  var toggle = true;
 
-if(toggle)
-{
-  $('.doggo').animate({"bottom":"+=50px", "left":"+=20px"}, 150)
-            .animate({"bottom":"+=0px", "left":"+=4px"},30)
-            .animate({"bottom":"-=50px", "left":"+=20px"},150);
-  toggle=false;
-}
-else
-{
-  $('.doggo').animate({"bottom":"+=50px", "left":"-=20px"}, 150)
-            .animate({"bottom":"+=0px", "left":"-=4px"},30)
-            .animate({"bottom":"-=50px", "left":"-=20px"},150);
-  toggle=true;
-}
+  $(document.getElementById("oblivion")).on("click", function(){
+
+    if(toggle)
+    {
+      $('.doggo').animate({"bottom":"+=50px", "left":"+=20px"}, 150)
+      .animate({"bottom":"+=0px", "left":"+=4px"},30)
+      .animate({"bottom":"-=50px", "left":"+=20px"},150);
+      toggle=false;
+    }
+    else
+    {
+      $('.doggo').animate({"bottom":"+=50px", "left":"-=20px"}, 150)
+      .animate({"bottom":"+=0px", "left":"-=4px"},30)
+      .animate({"bottom":"-=50px", "left":"-=20px"},150);
+      toggle=true;
+    }
 
   // $(".doggo").fadeOut("slow");
 });
 
-function plotSVG(data) {
+  function plotSVG(data) {
 
-  console.log(data);
+    console.log(data);
 
-  var vis = d3.select("#chart");
-  var WIDTH = 700;
-  var HEIGHT = 350;
-  var MARGINS = {
-        top: 20,
-        right: 20,
-        bottom: 20,
-        left: 50
-  };
+    var vis = d3.select("#chart");
+    var WIDTH = 700;
+    var HEIGHT = 350;
+    var MARGINS = {
+      top: 20,
+      right: 20,
+      bottom: 20,
+      left: 50
+    };
 
-  var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5]);
-  var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,10]);
+    var xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5]);
+    var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,10]);
 
-  var xAxis = d3.svg.axis().scale(xScale);
-  var yAxis = d3.svg.axis()
+    var xAxis = d3.svg.axis().scale(xScale);
+    var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left");
 
   // text label for the x axis
   vis.append("text")
-    .attr("transform",
-          "translate(" + (WIDTH/2) + " ," +
-                         (HEIGHT + MARGINS.top + 5) + ")")
-    .style("text-anchor", "middle")
-    .text("TIME (min)");
+  .attr("transform",
+    "translate(" + (WIDTH/2) + " ," +
+    (HEIGHT + MARGINS.top + 5) + ")")
+  .style("text-anchor", "middle")
+  .text("TIME (min)");
 
   // text label for the y axis
   vis.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("x", 0 - (HEIGHT / 2))
-        .attr("y", MARGINS.left - 50)
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("SPEED (mph)");
+  .attr("transform", "rotate(-90)")
+  .attr("x", 0 - (HEIGHT / 2))
+  .attr("y", MARGINS.left - 50)
+  .attr("dy", "1em")
+  .style("text-anchor", "middle")
+  .text("SPEED (mph)");
 
   vis.append("svg:g")
-    .attr("class", "axis")
-    .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-    .style("text-anchor", "end")
-    .text("Number of Applicatons")
-    .call(xAxis);
+  .attr("class", "axis")
+  .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+  .style("text-anchor", "end")
+  .text("Number of Applicatons")
+  .call(xAxis);
 
   vis.append("svg:g")
-    .attr("class", "axis")
-    .attr("transform", "translate(" + MARGINS.left + ",0)")
-    .call(yAxis);
+  .attr("class", "axis")
+  .attr("transform", "translate(" + MARGINS.left + ",0)")
+  .call(yAxis);
 
   var lineGen = d3.svg.line()
-    .x(function(d) {
-      return xScale(d.time);
-    })
-    .y(function(d) {
-      return yScale(d.value);
-    })
-    .interpolate("basis");
+  .x(function(d) {
+    return xScale(d.time);
+  })
+  .y(function(d) {
+    return yScale(d.value);
+  })
+  .interpolate("basis");
 
   vis.append('svg:path')
-    .attr('d', lineGen(data))
-    .attr('stroke', 'blue')
-    .attr('stroke-width', 2)
-    .attr('fill', 'none');
+  .attr('d', lineGen(data))
+  .attr('stroke', 'blue')
+  .attr('stroke-width', 2)
+  .attr('fill', 'none');
 
 }
 
@@ -263,57 +275,73 @@ var values = [];
 
 var max = 0;
 
-$('.refreshButton').one("click", function(){
+$('.refreshButton').on("click", function(){
+
+  $(".dataButtonList").empty();
     // GET RIDES
     $.getJSON("http://localhost:8080/list/rides", function(result){
-        $.each(result, function(i, field){
-            var newElement = '<button type="button" class="rideButton list-group-item" id="'
-            + field + '" > Ride ' + (i+1) + ' </button>';
-            $(".dataButtonList").append(newElement);
-            console.log(newElement);
-        });
+      $.each(result, function(i, field){
+        var newElement = '<button type="button" class="rideButton list-group-item" id="'
+        + field + '" > Ride ' + (i+1) + ' </button>';
+        $(".dataButtonList").append(newElement);
+        console.log(newElement);
+      });
     });
-});
+  });
 
-$(document).one("click", ".rideButton", function() {
-    times = [];
-    values = [];
+$(document).on("click", ".rideButton", function() {
+  times = [];
+  values = [];
 
-    var fullData;
+  var fullData;
+  var dateNride = this.id.split("Ride");
+  var mon = parseInt(dateNride[0].substr(0, 2));
+  var day = parseInt(dateNride[0].substr(2, 2));
+  var year = parseInt(dateNride[0].substr(4, 4));
 
-    var newTitle = '<div class="rideTitle"><h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1></div>';
+  var newTitle = '<div class="rideTitle"><h1>Ride ' + dateNride[1] + ' on '+ months[mon] + " " + day + ", " + year +'</h1></div>';
 
 
     // Create title
-    $(".title").append(newTitle);
+    $(".title").html(newTitle);
+    $("#chart").empty();
 
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
-        fullData = result;
-        console.log(result);
-        $.each(result, function(i, obj) {
-            dump.push(obj);
-            times.unshift(obj.time);
-            values.push(obj.value);
-        });
+      fullData = result;
+      console.log(result);
+      $.each(result, function(i, obj) {
+        dump.push(obj);
+        times.unshift(obj.time);
+        values.push(obj.value);
+      });
 
-        plotSVG(fullData);
-        console.log(fullData);
+      plotSVG(fullData);
+      console.log(fullData);
     });
 
     $.getJSON("http://localhost:8080/stats/" + this.id + "/", function(result){
-	data = result;
+     data = result;
 
-  $("#totalDistance").text("Total Distance Travelled:");
-  $("#averageSpeed").text("Average Speed:");
-  $("#emissionsPrevented").text("CO2 Emissions Avoided:");
-  $("#totalDuration").text("Duration of Ride:");
-	$(".averageSpeed").text(data.speed.average + " mph");
-	$(".totalDistance").text(data.distance.traveled + " mi");
-	$(".emissionsPrevented").text(data.carbon.emissionsPrevented + " ppm");
-	$(".totalDuration").text(data.time.elapsed + " minutes");
-    });
+     $("#totalDistance").text("Total Distance Travelled: ");
+     $("#averageSpeed").text("Average Speed: ");
+     $("#topSpeed").text("Top Speed: ")
+     $("#emissionsPrevented").text("CO2 Emissions Avoided: ");
+     $("#totalDuration").text("Duration of Ride: ");
+     $("#energyUsed").text("Energy Used: ");
+     $("#energyEquiv").text("Car Energy Equivalent: ");
+     $("$energySaved").text("Energy Saved: ");
 
-});
+     $(".averageSpeed").text(data.speed.average + " mph");
+     $(".topSpeed").text(data.speed.top + " mph");
+     $(".totalDistance").text(data.distance.traveled + " mi");
+     $(".emissionsPrevented").text(data.carbon.emissionsPrevented + " ppm");
+     $(".totalDuration").text(data.time.elapsed + " min");
+     $(".energyUsed").text(data.energy.used + " kwh");
+     $(".energyEquiv").text(data.energy.equivalent + " kwh");
+     $(".energySaved").text(data.energy.savings + " kwh");
+   });
+
+  });
 
 </script>
 </body>

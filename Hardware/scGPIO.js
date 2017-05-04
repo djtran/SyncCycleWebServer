@@ -1,9 +1,9 @@
 //scGPIO.js
 
 var Gpio = require('onoff').Gpio,
-	MongoCycle = require("./scMongo.js"),
+MongoCycle = require("./scMongo.js"),
 
-	speedometer = new Gpio(2, 'in', 'falling');
+speedometer = new Gpio(2, 'in', 'falling');
 
 var coll;
 var beginningMillis;
@@ -85,34 +85,34 @@ module.exports = {
 //////////////////////////////////////////	
 //////////////////////////////////////////
 
-var dummyData = 5;
-
 //USE THE DATA CALCULATION FUNCTIONS IN HERE.
 function recalculateStats(coll){
 
 	console.log(coll.collectionName);
-	//Energy
-	MongoCycle.updateStats(coll, "energy", "used", dummyData.toString());
 
-	//Carbon
-	MongoCycle.updateStats(coll, "carbon", "emissionsPrevented", 
-		8887/21.6*lastSpeeds[lastSpeeds.length-1]*(Date.now()-beginningMillis)/3600000);
+	MongoCycle.getStats(coll, function(statDoc){
 
-	//Speed
-	averageSpeed(function(topSpeed,averageSpeed){
-		MongoCycle.updateStats(coll, "speed", "average", averageSpeed);
-		MongoCycle.updateStats(coll, "speed", "top", topSpeed);
+		var deltaT = Date.now() - lastTime;
+		//get actual sensors and then make this calculation proper.
+		//Energy
+		var bikeE = parseFloat(statDoc.speed.average) + .5*366/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
+		var carE = parseFloat(statDoc.speed.average) + .5*1710/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
+		MongoCycle.updateStats(coll, "energy", "used", bikeE);
+		MongoCycle.updateStats(coll, "energy", "equivalent", carE);
+		MongoCycle.updateStats(coll, "energy", "savings", carE-bikeE);
+		//Carbon
+		MongoCycle.updateStats(coll, "carbon", "emissionsPrevented",parseFloat(statDoc.carbon.emissionsPrevented) + 8887/21.6*lastSpeeds[lastSpeeds.length-1]*(deltaT)/3600000);
+
+		//Speed
+		averageSpeed(function(topSpeed,averageSpeed){
+			MongoCycle.updateStats(coll, "speed", "average", averageSpeed);
+			MongoCycle.updateStats(coll, "speed", "top", topSpeed);
+			MongoCycle.updateStats(coll, "distance", "traveled", parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/60000);
+		});
+
+		//Time
+		MongoCycle.updateStats(coll, "time", "elapsed", parseFloat(statDoc.time.elapsed) + deltaT/60000);
 	});
-
-	//Distance
-	MongoCycle.getStats(coll, function(doc){
-		var avgSpd = parseInt(doc.speed.average, 10);
-	});
-
-	//Time
-	MongoCycle.updateStats(coll, "time", "elapsed", (Date.now() - beginningMillis)/60000);
-
-	dummyData++;
 }
 
 function enableSensors(){
@@ -223,15 +223,22 @@ function averageSpeed(callback)
 	MongoCycle.getDataPoints(coll, MongoCycle.Sensor.speedometer, 5000, function(docs){
 		var totalSpeed = 0;
 		var topSpeed = 0;
-		for(var i = 0; i < docs.length; i++)
+		if(docs.length < 1)
 		{
-			if(docs[i].value > topSpeed)
-			{
-				topSpeed = docs[i].value;
-			}
-			totalSpeed += docs[i].value;
+			callback(0,0);
 		}
+		else
+		{
 
-		callback(topSpeed, totalSpeed/docs.length); 
+			for(var i = 0; i < docs.length; i++)
+			{
+				if(docs[i].value > topSpeed)
+				{
+					topSpeed = docs[i].value;
+				}
+				totalSpeed += docs[i].value;
+			}
+			callback(topSpeed, totalSpeed/docs.length); 
+		}
 	});
 }
