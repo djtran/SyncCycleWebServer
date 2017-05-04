@@ -21,120 +21,120 @@
   }
 
   @media screen, print {
-  body{
-    font-family: 'Open Sans', sans-serif;
-  }
+    body{
+      font-family: 'Open Sans', sans-serif;
+    }
 
-  .container {
-    width: 80%;
-    margin: 15px auto;
-  }
+    .container {
+      width: 80%;
+      margin: 15px auto;
+    }
 
-  html, body, .container-fluid, .col-md-3 {
-    height:100%;
-  }
+    html, body, .container-fluid, .col-md-3 {
+      height:100%;
+    }
 
-  .buffer {
-    background-color: #EEEEEE;
-  }
+    .buffer {
+      background-color: #EEEEEE;
+    }
 
-  .dataButtonList{
-    padding: 2%;
-  }
+    .dataButtonList{
+      padding: 2%;
+    }
 
-  #sidebar{
-    padding:2%;
-  }
-  h6, h2, p, h4 {
-    font-family: 'Titillium Web', sans-serif;
-    text-align: left;
-  }
+    #sidebar{
+      padding:2%;
+    }
+    h6, h2, p, h4 {
+      font-family: 'Titillium Web', sans-serif;
+      text-align: left;
+    }
 
-  #main-row > div, #buffer{
-    height:100%;
-  }
+    #main-row > div, #buffer{
+      height:100%;
+    }
 
-  .extra-stats {
-    height: auto;
-    font-size:18px;
-    margin: 15%;
-    margin-top: 5%;
-  }
+    .extra-stats {
+      height: auto;
+      font-size:18px;
+      margin: 15%;
+      margin-top: 5%;
+    }
 
-  .button-row {
-    background-color: #1d1160
-    height: 100%;
-  }
+    .button-row {
+      background-color: #1d1160
+      height: 100%;
+    }
 
-  button {
-    font-family: 'Open Sans', sans-serif;
-  }
+    button {
+      font-family: 'Open Sans', sans-serif;
+    }
 
-  body, #sidebar {
-    background-color: #1d1160;
-    box-shadow: 5px 0px 5px;
-    position: relative;
-    z-index: 10;
-  }
+    body, #sidebar {
+      background-color: #1d1160;
+      box-shadow: 5px 0px 5px;
+      position: relative;
+      z-index: 10;
+    }
 
-  .main-display {
-    background-color: #00c1d5;
-  }
+    .main-display {
+      background-color: #00c1d5;
+    }
 
-  .axis path {
-    fill: none;
-    stroke: #777;
-    shape-rendering: crispEdges;
-  }
+    .axis path {
+      fill: none;
+      stroke: #777;
+      shape-rendering: crispEdges;
+    }
 
-  .axis text {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 13px;
-  }
+    .axis text {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 13px;
+    }
 
-  img {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    max-width: 100%;
-    height: auto;
-  }
+    img {
+      padding-bottom: 10px;
+      padding-top: 10px;
+      max-width: 100%;
+      height: auto;
+    }
 
-  .vert-fill{
-    height:100%;
-  }
-  .fill{
-    height: 100%;
-    width: 100%;
-  }
-  .padme2{
-    padding:2%;
-  }
-  svg{
-    text-align: center;
-    display: block;
-    margin: auto;
-  }
-  .doggo{
-    position: fixed;
-    bottom:-10px;
-    left:1%;
-    transform: scaleX(-1);
-    z-index: 11;
-  }
+    .vert-fill{
+      height:100%;
+    }
+    .fill{
+      height: 100%;
+      width: 100%;
+    }
+    .padme2{
+      padding:2%;
+    }
+    svg{
+      text-align: center;
+      display: block;
+      margin: auto;
+    }
+    .doggo{
+      position: fixed;
+      bottom:-10px;
+      left:1%;
+      transform: scaleX(-1);
+      z-index: 11;
+    }
 
-  .print-page-button {
-    position: fixed;
-    bottom: 2%;
-    left: 10%;
-    z-index: 12;
-  }
+    .print-page-button {
+      position: fixed;
+      bottom: 2%;
+      left: 15%;
+      z-index: 12;
+    }
 
 
-  .logobg{
-    background: url(images/syncLogo.png) no-repeat center;
-    background-size: contain;
+    .logobg{
+      background: url(images/syncLogo.png) no-repeat center;
+      background-size: contain;
+    }
   }
-}
 </style>
 <body id="print-page">
 
@@ -160,18 +160,18 @@
         <div class="title" style="backgroundColor: #00c1d5">
         </div>
         <div class="dump">
-        <div class="panel padme2">
-        <div class="logobg fill">
+          <div class="panel padme2">
+            <div class="logobg fill">
 
-            <svg id="chart" width="700" height="380" ></svg>
+              <svg id="chart" width="700" height="380" ></svg>
+            </div>
           </div>
-        </div>
         </div>
 
 
         <div class="row extra-stats">
           <div class="panel panel-content padme2 col-md-12">
-            <div class="col-md-8">
+            <div class="col-md-7">
               <p id="totalDistance"><strong></strong></p>
               <p id="averageSpeed"><strong></strong></p>
               <p id="topSpeed"><strong></strong></p>
@@ -182,7 +182,7 @@
               <p id="energyEquiv"><strong></strong></p>
               <p id="energySaved"><strong></strong></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
               <p class="totalDistance"></p>
               <p class="averageSpeed"></p>
               <p class="topSpeed"></p>
@@ -203,7 +203,7 @@
       </div>
     </div>
 
-    <img class="doggo oblivion" src="images/dog.png"></img>
+    <img class="doggo" id="oblivion" src="images/dog.png"></img>
 
     <button type="button" class="print-page-button" onclick="printJS('print-page', 'html')">
       Print Form
@@ -232,8 +232,8 @@
         toggle=true;
       }
 
-  // $(".doggo").fadeOut("slow");
-});
+    // $(".doggo").fadeOut("slow");
+    });
 
     function plotSVG(data) {
 
@@ -315,8 +315,14 @@ $('.refreshButton').on("click", function(){
     // GET RIDES
     $.getJSON("http://localhost:8080/list/rides", function(result){
       $.each(result, function(i, field){
+        var fullData;
+        var dateNride = this.id.split("Ride");
+        var mon = parseInt(dateNride[0].substr(0, 2));
+        var day = parseInt(dateNride[0].substr(2, 2));
+        var year = parseInt(dateNride[0].substr(4, 4));
+        
         var newElement = '<button type="button" class="rideButton list-group-item" id="'
-        + field + '" > Ride ' + (i+1) + ' </button>';
+        + field + '" > '+ months[mon] + " " + day + ", " + year +' Ride ' + (i+1) + ' </button>';
         $(".dataButtonList").append(newElement);
         console.log(newElement);
       });

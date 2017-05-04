@@ -4,7 +4,8 @@
   "description": "This is the service that will run on the Sync Cycle's on board system. It's responsible for maintaining the database, bluetooth connectivity, and running the local web page.",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "web": "node webOnly.js"
   },
   "repository": {
     "type": "git",

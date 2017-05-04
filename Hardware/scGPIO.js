@@ -102,21 +102,21 @@ function recalculateStats(coll){
 			//Energy
 			var bikeE = parseFloat(statDoc.speed.average) + .5*366/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
 			var carE = parseFloat(statDoc.speed.average) + .5*1710/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
-			MongoCycle.updateStats(coll, "energy", "used", bikeE);
-			MongoCycle.updateStats(coll, "energy", "equivalent", carE);
-			MongoCycle.updateStats(coll, "energy", "savings", carE-bikeE);
+			MongoCycle.updateStats(coll, "energy", "used", bikeE.toFixed(3));
+			MongoCycle.updateStats(coll, "energy", "equivalent", carE.toFixed(3));
+			MongoCycle.updateStats(coll, "energy", "savings", (carE-bikeE).toFixed(3));
 			//Carbon
-			MongoCycle.updateStats(coll, "carbon", "emissionsPrevented",parseFloat(statDoc.carbon.emissionsPrevented) + 8887/21.6*lastSpeeds[lastSpeeds.length-1]*(deltaT)/3600000);
+			MongoCycle.updateStats(coll, "carbon", "emissionsPrevented",(parseFloat(statDoc.carbon.emissionsPrevented) + 8887/21.6*lastSpeeds[lastSpeeds.length-1]*(deltaT)/3600000).toFixed(3));
 
 			//Speed
 			averageSpeed(function(topSpeed,averageSpeed){
-				MongoCycle.updateStats(coll, "speed", "average", averageSpeed);
-				MongoCycle.updateStats(coll, "speed", "top", topSpeed);
-				MongoCycle.updateStats(coll, "distance", "traveled", parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/60000);
+				MongoCycle.updateStats(coll, "speed", "average", averageSpeed.toFixed(3));
+				MongoCycle.updateStats(coll, "speed", "top", topSpeed.toFixed(3));
+				MongoCycle.updateStats(coll, "distance", "traveled", (parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/60000).toFixed(3));
 			});
 
 		//Time
-		MongoCycle.updateStats(coll, "time", "elapsed", parseFloat(statDoc.time.elapsed) + deltaT/60000);
+		MongoCycle.updateStats(coll, "time", "elapsed", (parseFloat(statDoc.time.elapsed) + deltaT/60000).toFixed(3));
 		});
 	}
 	catch(err)
