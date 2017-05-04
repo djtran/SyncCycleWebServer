@@ -112,7 +112,7 @@ function recalculateStats(coll){
 			averageSpeed(function(topSpeed,averageSpeed){
 				MongoCycle.updateStats(coll, "speed", "average", averageSpeed.toFixed(3));
 				MongoCycle.updateStats(coll, "speed", "top", topSpeed.toFixed(3));
-				MongoCycle.updateStats(coll, "distance", "traveled", (parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/60000).toFixed(3));
+				MongoCycle.updateStats(coll, "distance", "traveled", (parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/3600000).toFixed(3));
 			});
 
 		//Time
