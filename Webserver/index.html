@@ -316,11 +316,11 @@ $('.refreshButton').on("click", function(){
     $.getJSON("http://localhost:8080/list/rides", function(result){
       $.each(result, function(i, field){
         var fullData;
-        var dateNride = this.id.split("Ride");
+        var dateNride = field.split("Ride");
         var mon = parseInt(dateNride[0].substr(0, 2));
         var day = parseInt(dateNride[0].substr(2, 2));
         var year = parseInt(dateNride[0].substr(4, 4));
-        
+
         var newElement = '<button type="button" class="rideButton list-group-item" id="'
         + field + '" > '+ months[mon] + " " + day + ", " + year +' Ride ' + (i+1) + ' </button>';
         $(".dataButtonList").append(newElement);

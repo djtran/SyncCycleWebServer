@@ -62,6 +62,8 @@ module.exports = {
 		MongoCycle.addDataPoint(coll, MongoCycle.Sensor.location, time, locationData);
 	},
 	endRide : function(){
+		MongoCycle.addDataPoint(coll, MongoCycle.Sensor.speedometer, (Date.now()-beginningMillis)/60000, 0)
+
 		coll = null;
 		beginningMillis = 0;
 		lastTime = 0;
@@ -112,7 +114,7 @@ function recalculateStats(coll){
 			averageSpeed(function(topSpeed,averageSpeed){
 				MongoCycle.updateStats(coll, "speed", "average", averageSpeed.toFixed(3));
 				MongoCycle.updateStats(coll, "speed", "top", topSpeed.toFixed(3));
-				MongoCycle.updateStats(coll, "distance", "traveled", (parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/60000).toFixed(3));
+				MongoCycle.updateStats(coll, "distance", "traveled", (parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/3600000).toFixed(3));
 			});
 
 		//Time
