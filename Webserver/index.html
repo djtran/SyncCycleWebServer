@@ -93,7 +93,7 @@
       <img src="http://naturalenergywyre.co.uk/wp-content/uploads/2015/02/1000px-National_Grid.svg_.png"></img>
       <div class="button-row row text-center">
 
-        <button type="button" class="myButton btn btn-primary">Refresh Data</button>
+        <button type="button" class="refreshButton btn btn-primary">Refresh Data</button>
         <ul class="dataButtonList col-md-12 list-group">
         </ul>
 
@@ -171,6 +171,7 @@ function plotSVG(data) {
     .scale(yScale)
     .orient("left");
 
+  // text label for the x axis
   vis.append("text")
     .attr("transform",
           "translate(" + (WIDTH/2) + " ," +
@@ -222,7 +223,7 @@ var values = [];
 
 var max = 0;
 
-$('.myButton').on("click", function(){
+$('.refreshButton').one("click", function(){
     // GET RIDES
     $.getJSON("http://localhost:8080/list/rides", function(result){
         $.each(result, function(i, field){
@@ -243,6 +244,8 @@ $(document).one("click", ".rideButton", function() {
 
     var newTitle = '<div class="rideTitle"><h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1></div>';
 
+
+    // Create title
     $(".title").append(newTitle);
 
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
@@ -252,14 +255,6 @@ $(document).one("click", ".rideButton", function() {
             dump.push(obj);
             times.unshift(obj.time);
             values.push(obj.value);
-
-            // if (i == 0 || i == 19) {
-            //   obj.value = 0;
-            // } else {
-            //   obj.value = Math.floor(Math.random() * 24);
-            // }
-
-
         });
 
         plotSVG(fullData);
@@ -279,59 +274,7 @@ $(document).one("click", ".rideButton", function() {
 	$(".totalDuration").text(data.time.elapsed + " minutes");
     });
 
-    //var myChart = graph(times, values);
-
-
-    //console.log(max);
 });
 
-
-
-//Chart code
-
-
-
-function graph(time, value) {
-    $(".title").append('<canvas id="myChart" style="width: 100%;"></canvas>');
-
-    var ctx = $("#myChart");
-
-    var myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: time,
-        datasets: [{
-          label: 'Key',
-          data: value,
-          pointRadius: 1,
-          pointHoverRadius: 10
-        }],
-      },
-      options: {
-        scales: {
-            xAxes: [{
-                display: true,
-                scaleLabel: {
-                  display: true,
-                  labelString: 'TIME (s)'
-                }
-            }],
-            yAxes: [{
-                display: true,
-                scaleLabel: {
-                  display: true,
-                  labelString: 'SPEED (mph)'
-                }
-            }]
-        },
-        title:{
-                  display: true,
-                  text:"Values"
-              }
-      }
-    });
-
-    return myChart;
-}
 </script>
 </body>
