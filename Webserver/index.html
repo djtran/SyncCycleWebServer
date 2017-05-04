@@ -9,22 +9,21 @@
     font-family:"Titillium Web";
     src:"fonts/TitilliumWeb-Regular.ttf" format("truetype");
   }
+  body{
+    font-family: 'Open Sans', sans-serif;
+  }
 
   .container {
     width: 80%;
     margin: 15px auto;
   }
 
-  html, body, .container-fluid, .col-md-3, .row {
+  html, body, .container-fluid, .col-md-3 {
     height:100%;
   }
 
   .buffer {
     background-color: #EEEEEE;
-  }
-
-  #mid-strip {
-    background-color: #00a3e0;
   }
 
 
@@ -38,8 +37,7 @@
   }
 
   .extra-stats {
-    margin-top: -320px;
-    height: 20%;
+    height: auto;
   }
 
   .button-row {
@@ -53,6 +51,9 @@
 
   body, #sidebar {
     background-color: #1d1160;
+    box-shadow: 5px 0px 5px;
+    position: relative;
+    z-index: 10;
   }
 
   .main-display {
@@ -79,7 +80,24 @@
     padding-top: 10px;
     max-width: 100%;
     height: auto;
-    background-color: #1d1160;
+  }
+
+  .vert-fill{
+    height:100%;
+  }
+  .padme5{
+    padding:5%;
+  }
+  svg{
+    text-align: center;
+    margin:auto;
+  }
+  .doggo{
+    position: fixed;
+    bottom:-10px;
+    left:1%;
+    transform: scaleX(-1);
+    z-index: 11;
   }
 
 </style>
@@ -94,35 +112,31 @@
 
 <div class="container-fluid">
 
-  <div class="row" id="main-row">
+  <div class="row vert-fill" id="main-row">
     <div class="col-md-3 col-lg-3 no-float" id="sidebar">
-      <img src="http://naturalenergywyre.co.uk/wp-content/uploads/2015/02/1000px-National_Grid.svg_.png"></img>
+      <img src="images/ngLogo.png"></img>
       <div class="button-row row text-center">
 
-        <button type="button" class="myButton btn btn-primary">Refresh Data</button>
+        <button type="button" class="refreshButton btn btn-info">Refresh Data</button>
+        <br>
         <ul class="dataButtonList col-md-12 list-group">
         </ul>
 
       </div>
     </div>
     <div class="col-md-1 col-lg-1 buffer" style="height: 100%;">
-      <div class="row">
-        <div class="col-md-6" id="mid-strip"></div>
-        <div class="col-md-6"></div>
-      </div>
     </div>
-    <div class="col-md-7 col-lg-7 buffer" style="height: 100%;">
-      <div class="title row" style="backgroundColor: #00c1d5">
+    <div class="col-md-7 col-lg-7 buffer padme5" style="height: 100%;">
+      <div class="title" style="backgroundColor: #00c1d5">
       </div>
-      <div class="dump row" style="margin-top: -650px;">
-        <div class="panel">
-        <svg id="chart" width="1000" height="380"></svg>
+      <div class="dump">
+        <div class="panel padme5">
+        <svg id="chart" width="700" height="380" ></svg>
         </div>
       </div>
 
 
-      <div class="row extra-stats panel panel-content" style="height: 200px">
-
+      <div class="row extra-stats panel panel-content padme5">
         <div class="col-md-7 col-md-offset-1">
           <h3 id="totalDistance"><strong></strong></h2>
           <h3 id="averageSpeed"><strong></strong></h2>
@@ -136,9 +150,8 @@
           <h3 class="emissionsPrevented"></h3>
         </div>
 	     </div>
-       <div class="row extra-stats" style="margin-top:-600px">
+       <div class="row extra-stats">
          <div class="col-md-3">
-
 
        </div>
       </div>
@@ -150,10 +163,31 @@
     </div>
   </div>
 
+<a href="#" id="oblivion"><img class="doggo" src="images/dog.png"></img></a>
 
 </div>
 
 <script>
+var toggle = true;
+$(document.getElementById("oblivion")).on("click", function(){
+
+if(toggle)
+{
+  $('.doggo').animate({"bottom":"+=50px", "left":"+=20px"}, 150)
+            .animate({"bottom":"+=0px", "left":"+=4px"},30)
+            .animate({"bottom":"-=50px", "left":"+=20px"},150);
+  toggle=false;
+}
+else
+{
+  $('.doggo').animate({"bottom":"+=50px", "left":"-=20px"}, 150)
+            .animate({"bottom":"+=0px", "left":"-=4px"},30)
+            .animate({"bottom":"-=50px", "left":"-=20px"},150);
+  toggle=true;
+}
+
+  // $(".doggo").fadeOut("slow");
+});
 
 function plotSVG(data) {
 
@@ -177,6 +211,7 @@ function plotSVG(data) {
     .scale(yScale)
     .orient("left");
 
+  // text label for the x axis
   vis.append("text")
     .attr("transform",
           "translate(" + (WIDTH/2) + " ," +
@@ -228,7 +263,7 @@ var values = [];
 
 var max = 0;
 
-$('.myButton').on("click", function(){
+$('.refreshButton').one("click", function(){
     // GET RIDES
     $.getJSON("http://localhost:8080/list/rides", function(result){
         $.each(result, function(i, field){
@@ -237,7 +272,6 @@ $('.myButton').on("click", function(){
             $(".dataButtonList").append(newElement);
             console.log(newElement);
         });
-
     });
 });
 
@@ -249,6 +283,8 @@ $(document).one("click", ".rideButton", function() {
 
     var newTitle = '<div class="rideTitle"><h1>Ride ' + this.id[this.id.length - 1] + ' on 3/30/17 </h1></div>';
 
+
+    // Create title
     $(".title").append(newTitle);
 
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
@@ -258,14 +294,6 @@ $(document).one("click", ".rideButton", function() {
             dump.push(obj);
             times.unshift(obj.time);
             values.push(obj.value);
-
-            // if (i == 0 || i == 19) {
-            //   obj.value = 0;
-            // } else {
-            //   obj.value = Math.floor(Math.random() * 24);
-            // }
-
-
         });
 
         plotSVG(fullData);
@@ -285,59 +313,7 @@ $(document).one("click", ".rideButton", function() {
 	$(".totalDuration").text(data.time.elapsed + " minutes");
     });
 
-    //var myChart = graph(times, values);
-
-
-    //console.log(max);
 });
 
-
-
-//Chart code
-
-
-
-function graph(time, value) {
-    $(".title").append('<canvas id="myChart" style="width: 100%;"></canvas>');
-
-    var ctx = $("#myChart");
-
-    var myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: time,
-        datasets: [{
-          label: 'Key',
-          data: value,
-          pointRadius: 1,
-          pointHoverRadius: 10
-        }],
-      },
-      options: {
-        scales: {
-            xAxes: [{
-                display: true,
-                scaleLabel: {
-                  display: true,
-                  labelString: 'TIME (s)'
-                }
-            }],
-            yAxes: [{
-                display: true,
-                scaleLabel: {
-                  display: true,
-                  labelString: 'SPEED (mph)'
-                }
-            }]
-        },
-        title:{
-                  display: true,
-                  text:"Values"
-              }
-      }
-    });
-
-    return myChart;
-}
 </script>
 </body>
