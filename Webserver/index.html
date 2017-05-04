@@ -27,7 +27,7 @@
   }
 
 
-  h6, h2, h3, h4 {
+  h6, h2, p, h4 {
     font-family: 'Titillium Web', sans-serif;
     text-align: left;
   }
@@ -38,6 +38,7 @@
 
   .extra-stats {
     height: auto;
+    font-size:18px;
   }
 
   .button-row {
@@ -138,26 +139,26 @@
 
         <div class="row extra-stats panel panel-content padme5">
           <div class="col-md-6">
-            <h3 id="totalDistance"><strong></strong></h3>
-            <h3 id="averageSpeed"><strong></strong></h3>
-            <h3 id="topSpeed"><strong></strong></h3>
-            <h3 id="totalDuration"><strong></strong></h3>
-            <h3 id="emissionsPrevented"><strong></strong></h3>
+            <p id="totalDistance"><strong></strong></p>
+            <p id="averageSpeed"><strong></strong></p>
+            <p id="topSpeed"><strong></strong></p>
+            <p id="totalDuration"><strong></strong></p>
+            <p id="emissionsPrevented"><strong></strong></p>
 
-            <h3 id="energyUsed"><strong></strong></h3>
-            <h3 id="energyEquiv"><strong></strong></h3>
-            <h3 id="energySaved"><strong></strong></h3>
+            <p id="energyUsed"><strong></strong></p>
+            <p id="energyEquiv"><strong></strong></p>
+            <p id="energySaved"><strong></strong></p>
           </div>
           <div class="col-md-6">
-            <h3 class="totalDistance"></h3>
-            <h3 class="averageSpeed"></h3>
-            <h3 class="topSpeed"></h3>
-            <h3 class="totalDuration"></h3>
-            <h3 class="emissionsPrevented"></h3>
+            <p class="totalDistance"></p>
+            <p class="averageSpeed"></p>
+            <p class="topSpeed"></p>
+            <p class="totalDuration"></p>
+            <p class="emissionsPrevented"></p>
 
-            <h3 class="energyUsed"></h3>
-            <h3 class="energyEquiv"></h3>
-            <h3 class="energySaved"></h3>
+            <p class="energyUsed"></p>
+            <p class="energyEquiv"></p>
+            <p class="energySaved"></p>
           </div>
         </div>
         <div class="row extra-stats">
@@ -304,7 +305,6 @@ $(document).on("click", ".rideButton", function() {
 
     // Create title
     $(".title").html(newTitle);
-    $("#chart").empty();
 
     $.getJSON('http://localhost:8080/data/' + this.id + '/Sensor.speedometer', function(result) {
       fullData = result;
@@ -329,7 +329,7 @@ $(document).on("click", ".rideButton", function() {
      $("#totalDuration").text("Duration of Ride: ");
      $("#energyUsed").text("Energy Used: ");
      $("#energyEquiv").text("Car Energy Equivalent: ");
-     $("$energySaved").text("Energy Saved: ");
+     $("#energySaved").text("Energy Saved: ");
 
      $(".averageSpeed").text(data.speed.average + " mph");
      $(".topSpeed").text(data.speed.top + " mph");
