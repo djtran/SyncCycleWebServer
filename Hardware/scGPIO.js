@@ -100,8 +100,8 @@ function recalculateStats(coll){
 			var deltaT = Date.now() - lastTime;
 			//get actual sensors and then make this calculation proper.
 			//Energy
-			var bikeE = parseFloat(statDoc.speed.average) + .5*366/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
-			var carE = parseFloat(statDoc.speed.average) + .5*1710/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
+			var bikeE = parseFloat(statDoc.energy.used) + .5*366/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
+			var carE = parseFloat(statDoc.energy.equivalent) + .5*1710/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
 			MongoCycle.updateStats(coll, "energy", "used", bikeE.toFixed(3));
 			MongoCycle.updateStats(coll, "energy", "equivalent", carE.toFixed(3));
 			MongoCycle.updateStats(coll, "energy", "savings", (carE-bikeE).toFixed(3));
