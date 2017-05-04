@@ -88,31 +88,41 @@ module.exports = {
 //USE THE DATA CALCULATION FUNCTIONS IN HERE.
 function recalculateStats(coll){
 
-	console.log(coll.collectionName);
+	try{
+		if(!coll)
+		{
+			return;
+		}
+		console.log(coll.collectionName);
 
-	MongoCycle.getStats(coll, function(statDoc){
+		MongoCycle.getStats(coll, function(statDoc){
 
-		var deltaT = Date.now() - lastTime;
-		//get actual sensors and then make this calculation proper.
-		//Energy
-		var bikeE = parseFloat(statDoc.speed.average) + .5*366/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
-		var carE = parseFloat(statDoc.speed.average) + .5*1710/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
-		MongoCycle.updateStats(coll, "energy", "used", bikeE);
-		MongoCycle.updateStats(coll, "energy", "equivalent", carE);
-		MongoCycle.updateStats(coll, "energy", "savings", carE-bikeE);
-		//Carbon
-		MongoCycle.updateStats(coll, "carbon", "emissionsPrevented",parseFloat(statDoc.carbon.emissionsPrevented) + 8887/21.6*lastSpeeds[lastSpeeds.length-1]*(deltaT)/3600000);
+			var deltaT = Date.now() - lastTime;
+			//get actual sensors and then make this calculation proper.
+			//Energy
+			var bikeE = parseFloat(statDoc.speed.average) + .5*366/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
+			var carE = parseFloat(statDoc.speed.average) + .5*1710/2.21*lastSpeeds[lastSpeeds.length-1]*lastSpeeds[lastSpeeds.length-1]*deltaT/3600000/1000;
+			MongoCycle.updateStats(coll, "energy", "used", bikeE);
+			MongoCycle.updateStats(coll, "energy", "equivalent", carE);
+			MongoCycle.updateStats(coll, "energy", "savings", carE-bikeE);
+			//Carbon
+			MongoCycle.updateStats(coll, "carbon", "emissionsPrevented",parseFloat(statDoc.carbon.emissionsPrevented) + 8887/21.6*lastSpeeds[lastSpeeds.length-1]*(deltaT)/3600000);
 
-		//Speed
-		averageSpeed(function(topSpeed,averageSpeed){
-			MongoCycle.updateStats(coll, "speed", "average", averageSpeed);
-			MongoCycle.updateStats(coll, "speed", "top", topSpeed);
-			MongoCycle.updateStats(coll, "distance", "traveled", parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/60000);
-		});
+			//Speed
+			averageSpeed(function(topSpeed,averageSpeed){
+				MongoCycle.updateStats(coll, "speed", "average", averageSpeed);
+				MongoCycle.updateStats(coll, "speed", "top", topSpeed);
+				MongoCycle.updateStats(coll, "distance", "traveled", parseFloat(statDoc.distance.traveled) + lastSpeeds[lastSpeeds.length-1]*deltaT/60000);
+			});
 
 		//Time
 		MongoCycle.updateStats(coll, "time", "elapsed", parseFloat(statDoc.time.elapsed) + deltaT/60000);
-	});
+		});
+	}
+	catch(err)
+	{
+		console.log("recalculateStats error caught: " + err);
+	}
 }
 
 function enableSensors(){
