@@ -9,14 +9,18 @@
   <!-- <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet"> -->
 </head>
 <style>
-  @font-face{
+
+
+  @font-face screen, print {
     font-family:"Open Sans";
     src:"fonts/OpenSans-Regular.ttf" format("truetype");
   }
-  @font-face{
+  @font-face screen, print {
     font-family:"Titillium Web";
     src:"fonts/TitilliumWeb-Regular.ttf" format("truetype");
   }
+
+  @media screen, print {
   body{
     font-family: 'Open Sans', sans-serif;
   }
@@ -118,13 +122,21 @@
     z-index: 11;
   }
 
+  .print-page-button {
+    position: fixed;
+    bottom: 2%;
+    left: 10%;
+    z-index: 12;
+  }
+
+
   .logobg{
     background: url(images/syncLogo.png) no-repeat center;
     background-size: contain;
   }
-
+}
 </style>
-<body>
+<body id="print-page">
 
 
   <div class="container-fluid">
@@ -150,7 +162,7 @@
         <div class="dump">
         <div class="panel padme2">
         <div class="logobg fill">
-          
+
             <svg id="chart" width="700" height="380" ></svg>
           </div>
         </div>
@@ -192,6 +204,10 @@
     </div>
 
     <img class="doggo oblivion" src="images/dog.png"></img>
+
+    <button type="button" class="print-page-button" onclick="printJS('print-page', 'html')">
+      Print Form
+    </button>
 
   </div>
 
