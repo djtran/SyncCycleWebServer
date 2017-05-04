@@ -182,7 +182,16 @@ function idleSensors()
 			else
 			{
 				//console.log("new fuck");
-				timefuck = setTimeout(function(){if(counter >= 3) {/*console.log("> 3 fucks");*/ module.exports.startRide();} else { /*console.log("not enough fucks, why?");*/ } counter = 0; timefuck = null;}, 2500);
+				timefuck = setTimeout(function(){
+					if(counter >= 3) {
+						/*console.log("> 3 fucks");*/ 
+						module.exports.startRide();
+					} else {
+						/*console.log("not enough fucks, why?");*/ 
+					} 
+					counter = 0;
+					timefuck = null;
+				}, 2500);
 
 			}
 		}
