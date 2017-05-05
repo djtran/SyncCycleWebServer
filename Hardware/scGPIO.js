@@ -4,6 +4,8 @@ var Gpio = require('onoff').Gpio,
 MongoCycle = require("./scMongo.js"),
 
 speedometer = new Gpio(2, 'in', 'falling');
+toUno = new Gpio(3, "out");
+toUno.write(1);
 
 var coll;
 var beginningMillis;
@@ -133,12 +135,23 @@ function enableSensors(){
 	speedometer.watch(function(err, value){
 		if(err)
 		{
-			console.log("Error with speedometer, GPIO pin 2");
+			console.log("Error with speedometer, GPIO pin 2: " + err.toString());
 		}
 		else
 		{
-			//debouncing. If you got another tick in the last .1 seconds, disregard it.
-			if(Date.now() - lastTime < 100)
+			toUno.write(0, function(err)
+			{
+				if(err){
+					console.log("Error writing to GPIO pin 3: " + err.toString);
+				}
+				else
+				{
+					setTimeout(function(){ toUno.write(1); }, 50);
+				}
+			})
+
+			//debouncing. If you got another tick in the last .05 seconds, disregard it.
+			if(Date.now() - lastTime < 50)
 			{
 				return;
 			}
